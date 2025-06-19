@@ -179,7 +179,7 @@ WECHAT_APPID=your_appid
 WECHAT_SECRET=your_secret
 ```
 
-## 开发团队
+## 开发工具
 
 - 前端开发：微信小程序 + Vue.js
 - 后端开发：Spring Boot + Flask
@@ -192,4 +192,4 @@ WECHAT_SECRET=your_secret
 
 ## 联系方式
 
-如有问题或建议，请联系开发团队。 
+如有问题或建议，请联系dryhtenofficial@163.com。
