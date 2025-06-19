@@ -1,0 +1,400 @@
+.page-container {
+  position: relative;
+}
+
+.background {
+  width: 100%;
+  height: 400rpx;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.container {
+  padding: 20rpx;
+  background-color: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.guide-button {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10rpx 20rpx;
+  border-radius: 10rpx;
+  margin-top: 90rpx;
+  margin-bottom: 60rpx;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.content-box {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 30rpx;
+  padding: 20rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.content-box > view,
+.content-box > text,
+.content-box > image {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.logo {
+  width: 100rpx;
+  height: auto;
+  margin-bottom: 10rpx;
+}
+
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30rpx;
+}
+
+.title-group {
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.address {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.hours {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+}
+
+.swiper {
+  width: 100%;
+  height: 300rpx;
+  margin-bottom: 20rpx;
+  border-radius: 20rpx;
+}
+
+.banner {
+  width: 100%;
+  height: 100%;
+  border-radius: 20rpx;
+}
+
+.icon-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+
+.icon-button {
+  width: 18%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon {
+  width: 130rpx;
+  height: 130rpx;
+  margin-bottom: 5rpx;
+  border-radius: 20rpx;
+}
+
+.icon-text {
+  font-size: 25rpx;
+  color: #333;
+}
+
+.ticket-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+
+.ticket-card {
+  width: 48%;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 5rpx rgba(0, 0, 0, 0.1);
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.ticket-image {
+  width: 100%;
+  height: 200rpx;
+  object-fit: cover;
+}
+
+.ticket-info {
+  padding: 10rpx;
+}
+
+.ticket-title {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 5rpx;
+}
+
+.ticket-price {
+  font-size: 24rpx;
+  color: #F73171;
+  margin-bottom: 5rpx;
+}
+
+.ticket-description {
+  font-size: 20rpx;
+  color: #666;
+}
+
+.ticket-scroll {
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.ticket-cards {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  margin-top: 20rpx;
+}
+
+.ticket-card {
+  width: 320rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 5rpx rgba(0, 0, 0, 0.1);
+  margin-right: 20rpx;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ticket-image {
+  width: 100%;
+  height: 200rpx;
+  object-fit: cover;
+}
+
+.ticket-info {
+  padding: 10rpx;
+}
+
+.ticket-title {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 5rpx;
+}
+
+.ticket-price {
+  font-size: 24rpx;
+  color: #F73171;
+  margin-bottom: 5rpx;
+}
+
+.tabBox {
+  padding: 20rpx;
+}
+
+.navBox {
+  height: 74rpx;
+  display: flex;
+  padding: 1.5% 1.5%;
+  border-radius: 50rpx;
+  background: #E5EEFD;
+}
+
+.fontColorBox,
+.titleBox {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fontColorBox {
+  color: #fff;
+  font-weight: bold;
+  background: linear-gradient(151deg, #2F7EFC 0%, #7BADFC 100%);
+  border-radius: 50rpx;
+}
+
+.titleBox {
+  color: #1A1A1A;
+  font-size: 28rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.swiperTtemBox {
+  padding: 16rpx;
+  font-size: 28rpx;
+  height: calc(100vh - 150rpx);
+}
+
+.ticket-scroll {
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.ticket-cards {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  margin-top: 20rpx;
+}
+
+.ticket-card {
+  width: 320rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 5rpx rgba(0, 0, 0, 0.1);
+  margin-right: 20rpx;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ticket-image {
+  width: 100%;
+  height: 200rpx;
+  object-fit: cover;
+}
+
+.ticket-info {
+  padding: 10rpx;
+}
+
+.ticket-title {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 5rpx;
+}
+
+.ticket-price {
+  font-size: 24rpx;
+  color: #F73171;
+  margin-bottom: 5rpx;
+}
+
+.close-button {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  width: 30rpx;
+  height: 30rpx;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20rpx;
+  line-height: 1;
+  z-index: 1001;
+}
+
+.feedback-button {
+  position: fixed !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  touch-action: none;
+}
+
+.feedback-icon {
+  width: 64rpx;
+  height: 64rpx;
+  margin-bottom: 8rpx;
+}
+
+.feedback-text {
+  font-size: 24rpx;
+  color: #333;
+}
+
+.city-selector {
+  position: absolute;
+  top: 40rpx;
+  left: 40rpx;
+  z-index: 100;
+}
+
+.city-selector-header {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.city-selector-header text {
+  font-size: 28rpx;
+  color: #333;
+  margin-right: 8rpx;
+}
+
+.arrow-icon {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+.city-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 200rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  margin-top: 10rpx;
+}
+
+.city-dropdown-item {
+  padding: 20rpx;
+  border-bottom: 1rpx solid rgba(0, 0, 0, 0.1);
+}
+
+.city-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.city-dropdown-item text {
+  font-size: 28rpx;
+  color: #333;
+}

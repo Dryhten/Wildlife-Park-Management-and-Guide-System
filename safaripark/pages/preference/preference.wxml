@@ -1,0 +1,69 @@
+<view class="preference-container">
+  <view class="switch-section">
+    <text class="section-title">个性化推荐</text>
+    <switch 
+      checked="{{isPersonalized}}" 
+      bindchange="onSwitchChange"
+      color="#4CAF50"
+    />
+  </view>
+
+  <block wx:if="{{isPersonalized}}">
+    <view class="section">
+      <text class="section-title">您是步行还是自驾前往动物园？</text>
+      <picker 
+        mode="selector" 
+        range="{{transportModes}}" 
+        bindchange="onTransportChange"
+      >
+        <view class="picker">
+          {{selectedTransport || '请选择交通方式'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="section">
+      <text class="section-title">您喜欢的动物种类</text>
+      <!-- 已选动物展示区域 -->
+      <view class="selected-animals">
+        <view class="selected-item" wx:for="{{selectedAnimals}}" wx:key="*this">
+          <text>{{item}}</text>
+          <text class="remove-btn" data-animal="{{item}}" bindtap="selectAnimal">×</text>
+        </view>
+      </view>
+      
+      <!-- 搜索框 -->
+      <view class="search-box">
+        <input 
+          type="text" 
+          placeholder="点击搜索或选择动物" 
+          bindfocus="onSearchFocus"
+          bindinput="onSearchInput"
+          value="{{searchValue}}"
+        />
+      </view>
+
+      <!-- 动物选择列表 -->
+      <view class="animals-list" wx:if="{{showAnimals}}">
+        <view 
+          wx:for="{{filteredAnimals}}" 
+          wx:key="*this"
+          class="animal-option {{selectedAnimals.includes(item) ? 'selected' : ''}}"
+          data-animal="{{item}}"
+          bindtap="selectAnimal"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 只在内容被修改时显示保存按钮 -->
+  <button 
+    class="save-btn" 
+    bindtap="savePreference" 
+    wx:if="{{isPersonalized && isContentModified}}"
+  >
+    保存设置
+  </button>
+</view> 

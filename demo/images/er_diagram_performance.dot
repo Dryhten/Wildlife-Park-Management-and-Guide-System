@@ -1,0 +1,77 @@
+digraph ER {
+    // 图的全局设置
+    splines=spline;
+    node [fontname="Microsoft YaHei", fontsize=14];
+    edge [fontname="Microsoft YaHei", fontsize=14];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+10,10";
+    
+    // 表演表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    performances [label="动物表演表", pos="0,2!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    perf_id [label=<<u>表演ID</u>>, pos="0,2.8!"];
+    perf_title [label="表演名称", pos="1.2,2.4!"];
+    perf_duration [label="演出时长", pos="1.5,1.8!"];
+    perf_location [label="演出地点", pos="0.8,1.4!"];
+    perf_desc [label="演出简介", pos="0,1.2!"];
+    perf_park_id [label="园区ID", pos="-0.8,1.4!"];
+    perf_time [label="表演时间", pos="-1.5,1.8!"];
+    perf_date [label="表演日期", pos="-1.2,2.4!"];
+    perf_status [label="表演状态", pos="-0.4,3!"];
+    perf_capacity [label="最大预约数", pos="0.4,3!"];
+
+    // 表演预约表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    bookings [label="表演预约表", pos="-2,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    booking_id [label=<<u>预约ID</u>>, pos="-2,-0.2!"];
+    booking_user_id [label="用户ID", pos="-1,-0.6!"];
+    booking_perf_id [label="表演ID", pos="-0.8,-1!"];
+    booking_status [label="预约状态", pos="-1,-1.4!"];
+    booking_time [label="预约时间", pos="-2,-1.8!"];
+    booking_created [label="创建时间", pos="-3,-1.4!"];
+
+    // 用户表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    users [label="用户表", pos="2,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    user_id [label=<<u>用户ID</u>>, pos="2,-0.2!"];
+    user_name [label="用户名", pos="3,-0.6!"];
+    user_real_name [label="真实姓名", pos="3.2,-1!"];
+    user_phone [label="手机号", pos="3,-1.4!"];
+    user_openid [label="微信openid", pos="2,-1.8!"];
+    user_gender [label="性别", pos="1,-1.4!"];
+    user_created [label="创建时间", pos="1,-1!"];
+
+    // 关系节点
+    node [shape=diamond, style="filled", fillcolor=white, fontsize=14];
+    perf_booking_rel [label="预约", pos="-1,0.5!"];
+    user_booking_rel [label="发起", pos="0,-1!"];
+    park_perf_rel [label="举办", pos="1,0.5!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=black, fontsize=14];
+    
+    // 表演表的属性连接
+    performances -> {perf_id perf_title perf_duration perf_location perf_desc 
+                    perf_park_id perf_time perf_date perf_status perf_capacity};
+             
+    // 表演预约表的属性连接
+    bookings -> {booking_id booking_user_id booking_perf_id booking_status 
+                 booking_time booking_created};
+               
+    // 用户表的属性连接
+    users -> {user_id user_name user_real_name user_phone user_openid 
+              user_gender user_created};
+
+    // 实体间的关系（通过关系节点）
+    edge [dir=none, color=black, constraint=false, fontsize=14];
+    performances -> perf_booking_rel [label="1"];
+    perf_booking_rel -> bookings [label="N"];
+    users -> user_booking_rel [label="1"];
+    user_booking_rel -> bookings [label="N"];
+} 

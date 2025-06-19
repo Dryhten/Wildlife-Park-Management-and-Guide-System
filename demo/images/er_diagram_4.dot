@@ -1,0 +1,85 @@
+digraph ER {
+    // 图的全局设置
+    rankdir=TB;
+    splines=spline;
+    node [fontname="Microsoft YaHei"];
+    edge [fontname="Microsoft YaHei"];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+25,25";
+    
+    // 园区表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+    parks [label="园区表\nparks", pos="0,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    park_id [label="园区ID", pos="0,2!"];
+    park_name [label="名称", pos="1.5,1.5!"];
+    park_background [label="背景信息", pos="2,0!"];
+    park_features [label="特色景点", pos="1.5,-1.5!"];
+    park_distribution [label="动物分布", pos="0,-2!"];
+    park_guide [label="语音导览", pos="-1.5,-1.5!"];
+    park_created [label="创建时间", pos="-2,0!"];
+
+    // 安全预警表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+    safety_alerts [label="安全预警表\nsafety_alerts", pos="8,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    alert_id [label="预警ID", pos="8,2!"];
+    alert_user_id [label="用户ID(FK)", pos="9.5,1.5!"];
+    alert_zone_id [label="区域ID(FK)", pos="10,0!"];
+    alert_time [label="预警时间", pos="9.5,-1.5!"];
+    alert_status [label="预警状态", pos="8,-2!"];
+    alert_updated [label="更新时间", pos="6.5,-1.5!"];
+    alert_updater [label="更新者", pos="6,0!"];
+
+    // 危险区域表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+    danger_zones [label="危险区域表\ndanger_zones", pos="16,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    zone_id [label="区域ID", pos="16,2!"];
+    zone_name [label="区域名称", pos="17.5,1.5!"];
+    zone_desc [label="区域描述", pos="18,0!"];
+    zone_geometry [label="地理范围", pos="17.5,-1.5!"];
+    zone_risk [label="危险等级", pos="16,-2!"];
+    zone_status [label="状态", pos="14.5,-1.5!"];
+    zone_created [label="创建时间", pos="14,0!"];
+    zone_creator [label="创建人", pos="14.5,1.5!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=gray];
+    
+    // 园区表的属性连接
+    parks -> {park_id park_name park_background park_features 
+              park_distribution park_guide park_created};
+              
+    // 安全预警表的属性连接
+    safety_alerts -> {alert_id alert_user_id alert_zone_id alert_time 
+                     alert_status alert_updated alert_updater};
+                     
+    // 危险区域表的属性连接
+    danger_zones -> {zone_id zone_name zone_desc zone_geometry 
+                    zone_risk zone_status zone_created zone_creator};
+
+    // 实体间的关系（外键）
+    edge [dir=both, arrowhead=crow, arrowtail=none, color=blue, constraint=false];
+    parks -> danger_zones [label="1:n"];
+    danger_zones -> safety_alerts [label="1:n"];
+
+    // 标题
+    label = "图4: 园区-安全预警-危险区域关系图"
+    labelloc = "t"
+    fontsize = 20
+
+    // 图例
+    subgraph cluster_legend {
+        label="图例说明";
+        node [shape=box, style="rounded,filled", fillcolor=lightblue];
+        legend_entity [label="实体"];
+        node [shape=ellipse, style="filled", fillcolor=white];
+        legend_attribute [label="属性"];
+        edge [dir=both, arrowhead=crow, arrowtail=none, color=blue];
+        legend_relation [label="关系"];
+    }
+} 

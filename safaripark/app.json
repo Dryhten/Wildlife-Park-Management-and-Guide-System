@@ -1,0 +1,86 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/ticket/ticket",
+    "pages/mine/mine",
+    "pages/guide/guide",
+    "pages/order/order",
+    "pages/bind/bind",
+    "pages/personalInfo/personalInfo",
+    "pages/settlement/settlement",
+    "pages/payment/payment",
+    "pages/schedule/schedule",
+    "pages/performancebooking/performancebooking",
+    "pages/feedback/feedback",
+    "pages/coupons/coupons",
+    "pages/contact/contact",
+    "pages/parkbooking/parkbooking",
+    "pages/highlights/highlights",
+    "pages/traffic/traffic",
+    "pages/tips/tips",
+    "pages/preference/preference",
+    "pages/guide_map/guide_map",
+    "pages/poi_list/poi_list",
+    "pages/parkTraffic/parkTraffic"
+  ],
+
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "智慧导览",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4CAF50",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tabbar/home.png",
+        "selectedIconPath": "images/tabbar/home_active.png"
+      },
+      {
+        "pagePath": "pages/ticket/ticket",
+        "text": "门票",
+        "iconPath": "images/tabbar/shopping.png",
+        "selectedIconPath": "images/tabbar/shopping_active.png"
+      },
+      {
+        "pagePath": "pages/guide_map/guide_map",
+        "text": "导航",
+        "iconPath": "images/tabbar/map.png",
+        "selectedIconPath": "images/tabbar/map_active.png"
+      },
+      {
+        "pagePath": "pages/schedule/schedule",
+        "text": "预约",
+        "iconPath": "images/tabbar/schedule.png",
+        "selectedIconPath": "images/tabbar/schedule_active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "images/tabbar/user.png",
+        "selectedIconPath": "images/tabbar/user_active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于园区导航"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.5",
+      "provider": "wx069ba97219f66d99"
+    }
+  }
+}

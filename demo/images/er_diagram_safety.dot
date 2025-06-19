@@ -1,0 +1,75 @@
+digraph ER {
+    // 图的全局设置
+    splines=spline;
+    node [fontname="Microsoft YaHei", fontsize=14];
+    edge [fontname="Microsoft YaHei", fontsize=14];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+10,10";
+    
+    // 园区表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    parks [label="园区表", pos="0,2!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    park_id [label=<<u>园区ID</u>>, pos="0,2.8!"];
+    park_name [label="园区名称", pos="1.2,2.4!"];
+    park_zoo_id [label="动物园ID", pos="1.5,1.8!"];
+    park_background [label="背景信息", pos="0.8,1.4!"];
+    park_features [label="特色景点", pos="0,1.2!"];
+    park_distribution [label="动物分布", pos="-0.8,1.4!"];
+    park_guide [label="语音导览", pos="-1.5,1.8!"];
+    park_created [label="创建时间", pos="-1.2,2.4!"];
+
+    // 安全警报表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    alerts [label="安全警报表", pos="-2,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    alert_id [label=<<u>警报ID</u>>, pos="-2,-0.2!"];
+    alert_user_id [label="用户ID", pos="-1,-0.6!"];
+    alert_zone_id [label="区域ID", pos="-0.8,-1!"];
+    alert_time [label="警报时间", pos="-1,-1.4!"];
+    alert_status [label="警报状态", pos="-2,-1.8!"];
+    alert_update_time [label="更新时间", pos="-3,-1.4!"];
+    alert_updater [label="更新人", pos="-3,-1!"];
+
+    // 用户表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    users [label="用户表", pos="2,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    user_id [label=<<u>用户ID</u>>, pos="2,-0.2!"];
+    user_name [label="用户名", pos="3,-0.6!"];
+    user_real_name [label="真实姓名", pos="3.2,-1!"];
+    user_phone [label="手机号", pos="3,-1.4!"];
+    user_openid [label="微信openid", pos="2,-1.8!"];
+    user_gender [label="性别", pos="1,-1.4!"];
+    user_created [label="创建时间", pos="1,-1!"];
+
+    // 关系节点
+    node [shape=diamond, style="filled", fillcolor=white, fontsize=14];
+    park_alert_rel [label="监控区域", pos="-1,0.5!"];
+    user_alert_rel [label="触发", pos="0,-1!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=black, fontsize=14];
+    
+    // 园区表的属性连接
+    parks -> {park_id park_name park_zoo_id park_background park_features 
+              park_distribution park_guide park_created};
+             
+    // 安全警报表的属性连接
+    alerts -> {alert_id alert_user_id alert_zone_id alert_time alert_status 
+               alert_update_time alert_updater};
+               
+    // 用户表的属性连接
+    users -> {user_id user_name user_real_name user_phone user_openid 
+              user_gender user_created};
+
+    // 实体间的关系（通过关系节点）
+    edge [dir=none, color=black, constraint=false, fontsize=14];
+    parks -> park_alert_rel [label="1"];
+    park_alert_rel -> alerts [label="N"];
+    users -> user_alert_rel [label="1"];
+    user_alert_rel -> alerts [label="N"];
+} 

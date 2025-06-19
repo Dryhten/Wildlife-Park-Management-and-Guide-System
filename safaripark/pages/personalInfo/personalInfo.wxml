@@ -1,0 +1,33 @@
+<view class="page-container">
+  <image class="background" src="https://static.vecteezy.com/system/resources/previews/013/074/425/non_2x/flat-exotic-animal-background-free-vector.jpg" />
+  <view class="personal-info">
+    <view class="header">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+    </view>
+    <view class="info-list">
+      <view class="info-item">
+        <text>昵称</text>
+        <input placeholder="请输入昵称" value="{{userInfo.name}}" bindinput="onInputChange" data-field="name" />
+      </view>
+      <view class="info-item">
+        <text>真实姓名</text>
+        <input placeholder="请输入您的真实姓名" value="{{userInfo.realName}}" bindinput="onInputChange" data-field="realName" />
+      </view>
+      <view class="info-item">
+        <text>性别</text>
+        <picker mode="selector" range="{{['男', '女']}}" bindchange="onGenderChange">
+          <view class="picker">{{userInfo.gender || '请选择性别'}}</view>
+        </picker>
+      </view>
+      <view class="info-item">
+        <text>手机号</text>
+        <input placeholder="请输入手机号" value="{{userInfo.phone}}" bindinput="onInputChange" data-field="phone" />
+      </view>
+      <view class="info-item">
+        <text>身份证号</text>
+        <input placeholder="请输入您的身份证号" value="{{userInfo.idNumber}}" bindinput="onInputChange" data-field="idNumber" />
+      </view>
+    </view>
+    <button class="save-button" bindtap="saveInfo">保存</button>
+  </view>
+</view> 

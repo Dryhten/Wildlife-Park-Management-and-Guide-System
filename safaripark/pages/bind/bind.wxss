@@ -1,0 +1,110 @@
+.bind-container {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+  padding: 40rpx;
+}
+
+.bind-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60rpx;
+}
+
+.bind-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.bind-subtitle {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.bind-form {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.input-group {
+  margin-bottom: 40rpx;
+}
+
+.input-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.phone-input {
+  width: 100%;
+  height: 88rpx;
+  padding: 0 20rpx;
+  border: 2rpx solid #eee;
+  border-radius: 10rpx;
+  font-size: 32rpx;
+  background-color: #f8f8f8;
+}
+
+.phone-input:focus {
+  border-color: #FF7B00;
+  background-color: #fff;
+}
+
+.bind-button {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background-color: #FF7B00;
+  color: #fff;
+  font-size: 32rpx;
+  border-radius: 10rpx;
+  margin-bottom: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.bind-button:active {
+  opacity: 0.9;
+}
+
+.bind-tips {
+  margin-top: 40rpx;
+  padding-top: 40rpx;
+  border-top: 2rpx solid #eee;
+}
+
+.bind-tips text {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.tips-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.tip-dot {
+  color: #FF7B00;
+  font-size: 32rpx;
+  margin-right: 10rpx;
+}
+
+.tips-item text {
+  font-size: 26rpx;
+  color: #666;
+  margin: 0;
+} 

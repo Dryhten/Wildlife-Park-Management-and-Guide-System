@@ -1,0 +1,120 @@
+<view class="map-container">
+  <!-- 刷新按钮 -->
+  <view class="refresh-btn" bindtap="onRefresh">
+    <image class="refresh-icon" src="/images/map_icon/refresh.png"></image>
+  </view>
+
+  <!-- 顶部消息栏 -->
+  <view class="message-bar" bindtap="onMessageTap" wx:if="{{showMessage && currentParkMessage}}">
+    <view class="message-content">
+      <image class="message-icon" src="/images/map_icon/info.png"></image>
+      <text>{{currentParkMessage}}</text>
+    </view>
+  </view>
+
+  <!-- 园区详情弹窗 -->
+  <view class="park-detail {{showParkDetail ? 'show' : ''}}" wx:if="{{currentParkInfo}}">
+    <view class="park-detail-header">
+      <text class="park-name">{{currentParkInfo.name}}</text>
+      <text class="close-btn" bindtap="closeParkDetail">×</text>
+    </view>
+    <scroll-view class="park-detail-content" scroll-y>
+      <view class="detail-section">
+        <text class="section-content">{{currentParkInfo.audioGuide}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 添加智能播报开关按钮 -->
+  <view class="broadcast-switch" bindtap="toggleAutoBroadcast">
+    <image 
+      class="broadcast-icon" 
+      src="/images/map_icon/{{enableAutoBroadcast ? 'switch-on' : 'switch-off'}}.png"
+    ></image>
+    <text>{{enableAutoBroadcast ? '播报开启' : '播报关闭'}}</text>
+  </view>
+
+  <map
+    id="parkMap"
+    longitude="{{center.longitude}}"
+    latitude="{{center.latitude}}"
+    scale="{{scale}}"
+    setting="{{setting}}"
+    markers="{{markers}}"
+    polyline="{{polyline}}"
+    include-points="{{includePoints}}"
+    bindmarkertap="onMarkerTap"
+    catchtap="onMapTap"
+    bindregionchange="onRegionChange"
+    bindscale="onScaleChange"
+    bindload="onMapLoaded"
+    show-location
+    enable-overlooking="{{false}}"
+    enable-3D="{{false}}"
+    enable-rotate="{{false}}"
+  ></map>
+
+  <!-- 兴趣点信息浮窗 -->
+  <view 
+    class="poi-info {{showPoiInfo ? 'show' : ''}}" 
+    wx:if="{{showPoiInfo && !polyline.length}}"
+    catchtap="onPoiInfoTap"
+    data-area="poi-info"
+  >
+    <view class="poi-info-content">
+      <!-- 添加图标和名称的容器 -->
+      <view class="poi-header">
+        <image class="poi-icon" src="{{CATEGORY_ICONS[currentPoi.category] || CATEGORY_ICONS.default}}"></image>
+        <view class="poi-name">{{currentPoi.name}}</view>
+      </view>
+      <button class="navigation-btn" catchtap="onStartNavigation">
+        <image class="nav-icon" src="/images/map_icon/navigation.png"></image>
+        <text>导航</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 导航指示 -->
+  <view class="navigation-tips" wx:if="{{navigationInstructions}}">
+    <image class="navigation-icon" src="/images/map_icon/navigation.png"></image>
+    <text>{{navigationInstructions}}</text>
+  </view>
+
+  <view class="clear-route" wx:if="{{polyline.length > 0}}" bindtap="clearRoute">
+    <image class="clear-route-icon" src="/images/map_icon/exit.png"></image>
+    <text>退出导航</text>
+  </view>
+
+  <view class="region-info" wx:if="{{showRegionInfo && !polyline.length}}">
+    <view class="info-header">
+      <text class="info-title">{{currentRegion.name}}</text>
+      <text class="close-btn" bindtap="closeRegionInfo">×</text>
+    </view>
+    <scroll-view class="info-content" scroll-y>
+      <view class="info-section">
+        <text class="section-title">简介</text>
+        <text class="section-content">{{currentRegion.description}}</text>
+      </view>
+      <view class="info-section">
+        <text class="section-title">特色景点</text>
+        <text class="section-content">{{currentRegion.features}}</text>
+      </view>
+      <button class="audio-guide-btn" bindtap="toggleAudioGuide">
+        {{showAudioGuide ? '关闭语音导览' : '打开语音导览'}}
+      </button>
+      <view class="audio-guide" wx:if="{{showAudioGuide}}">
+        <text class="section-content">{{currentRegion.audioGuide}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="location-tip" wx:if="{{!isInPark && !polyline.length}}">
+    <text>您当前不在园区范围内，仅可浏览地图</text>
+  </view>
+
+  <!-- 修改列表按钮显示条件 -->
+  <view class="poi-list-btn" bindtap="getParkPois" wx:if="{{!polyline.length}}">
+    <image class="list-icon" src="/images/map_icon/list.png"></image>
+    <text>列表</text>
+  </view>
+</view> 

@@ -1,0 +1,69 @@
+digraph ER {
+    // 图的全局设置
+    splines=spline;
+    node [fontname="Microsoft YaHei", fontsize=14];
+    edge [fontname="Microsoft YaHei", fontsize=14];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+5,5";
+    
+    // 园区信息表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    parks [label="园区信息表", pos="0,1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    park_id [label=<<u>园区ID</u>>, pos="0,1.4!"];
+    park_zoo_id [label="动物园ID", pos="0.6,1.3!"];
+    park_name [label="园区名称", pos="0.8,1!"];
+    park_background [label="背景信息", pos="0.6,0.7!"];
+    park_features [label="特色景点", pos="0,0.6!"];
+    park_distribution [label="动物分布", pos="-0.6,0.7!"];
+    park_guide [label="语音导览", pos="-0.8,1!"];
+    park_created [label="创建时间", pos="-0.6,1.3!"];
+
+    // 园区地理范围表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    geometries [label="园区地理范围表", pos="-1.5,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    geo_id [label=<<u>地理范围ID</u>>, pos="-1.5,-0.6!"];
+    geo_park_id [label="园区ID", pos="-0.9,-0.7!"];
+    geo_geometry [label="地理范围", pos="-0.7,-1!"];
+    geo_created [label="创建时间", pos="-1.5,-1.4!"];
+
+    // 园区流量表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    traffic [label="园区流量表", pos="1.5,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    traffic_id [label=<<u>流量统计ID</u>>, pos="1.5,-0.6!"];
+    traffic_park_id [label="园区ID", pos="2.1,-0.7!"];
+    traffic_current [label="当前人数", pos="2.3,-1!"];
+    traffic_queue [label="排队人数", pos="2.1,-1.3!"];
+    traffic_updated [label="更新时间", pos="1.5,-1.4!"];
+
+    // 关系节点
+    node [shape=diamond, style="filled", fillcolor=white, fontsize=14];
+    park_geo_rel [label="定义范围", pos="-0.8,0!"];
+    park_traffic_rel [label="统计", pos="0.8,0!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=black, fontsize=14];
+    
+    // 园区信息表的属性连接
+    parks -> {park_id park_zoo_id park_name park_background park_features 
+              park_distribution park_guide park_created};
+             
+    // 园区地理范围表的属性连接
+    geometries -> {geo_id geo_park_id geo_geometry geo_created};
+               
+    // 园区流量表的属性连接
+    traffic -> {traffic_id traffic_park_id traffic_current traffic_queue 
+                traffic_updated};
+
+    // 实体间的关系（通过关系节点）
+    edge [dir=none, color=black, constraint=false, fontsize=14];
+    parks -> park_geo_rel [label="1"];
+    park_geo_rel -> geometries [label="1"];
+    parks -> park_traffic_rel [label="1"];
+    park_traffic_rel -> traffic [label="N"];
+} 

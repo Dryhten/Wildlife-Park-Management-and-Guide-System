@@ -1,0 +1,392 @@
+/* 主容器样式 */
+.container {
+  background-color: #f0f8ff;
+  padding: 10px;
+}
+
+/* 标签栏样式 */
+.tab-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.tab-item {
+  font-size: 28rpx;
+  color: #1A1A1A;
+  padding: 10rpx 20rpx;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  border-radius: 50rpx;
+}
+
+.tab-selected {
+  color: #fff;
+  background: linear-gradient(151deg, #2F7EFC 0%, #7BADFC 100%);
+  font-weight: bold;
+  border-radius: 50rpx;
+}
+
+/* 日期选择器样式 */
+.date-picker {
+  background-color: #4169e1;
+  color: white;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* 票务列表和年卡列表样式 */
+.ticket-list, .annual-card-list {
+  margin-top: 20px;
+  width: 340px;
+}
+
+/* 单个票务项的样式 */
+.ticket-item, .annual-card-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 320px;
+}
+
+/* 票务图片样式 */
+.ticket-image {
+  width: 130px !important;
+  height: 130px !important;
+  margin-right: 10px;
+  border-radius: 8px;
+}
+
+
+/* 票务信息样式 */
+.ticket-info {
+  flex: 1;
+  text-align: left;
+}
+
+.ticket-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+  text-align: left;
+}
+
+.ticket-price {
+  font-size: 28rpx;
+  color: #FF5722;
+  font-weight: 500;
+  margin-bottom: 16rpx;
+  text-align: left;
+}
+
+/* 票务数量按钮样式 */
+.ticket-count {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+  text-align: left;
+}
+
+/* 重新定义计数按钮样式 */
+.count-button {
+  width: 30px !important;
+  height: 30px !important;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 50%;
+  margin: 0 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  line-height: 30px;
+  padding: 0 !important; /* 移除内边距 */
+  min-height: 0 !important; /* 覆盖微信小程序默认最小高度 */
+  box-sizing: border-box !important;
+}
+
+/* 修复按钮内部文本居中问题 */
+.count-button::after {
+  border: none !important; /* 移除按钮边框 */
+}
+
+/* 票务描述样式 */
+.ticket-description {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+  text-align: left;
+}
+
+/* 详情按钮样式 */
+.detail-button {
+  margin-top: 5px;
+  padding: 5px 10px !important;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  line-height: 1.5 !important; /* 调整行高 */
+  min-height: 0 !important; /* 覆盖微信小程序默认最小高度 */
+  display: inline-block !important;
+  width: auto !important; /* 使按钮宽度自适应内容 */
+}
+
+/* 底部总计栏样式 */
+.total-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.total-text {
+  font-size: 16px;
+  font-weight: bold;
+  flex: 1;
+}
+
+/* 按钮组样式 */
+.button-group {
+  display: flex;
+  gap: 10rpx;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* 结算按钮样式 */
+.settlement-button {
+  width: 80px !important;
+  height: 40px !important;
+  font-size: 14px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 20px;
+  line-height: 40px !important; /* 确保文字垂直居中 */
+  padding: 0 !important; /* 移除内边距 */
+  display: inline-block !important;
+  text-align: center;
+  margin: 0 !important;
+}
+
+/* 清空按钮样式 */
+.clear-button {
+  padding: 0 15rpx !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  background-color: #666;
+  color: white;
+  font-size: 14px;
+  border-radius: 20px;
+  width: auto !important; /* 使按钮宽度自适应内容 */
+  display: inline-block !important;
+  text-align: center;
+  margin: 0 !important;
+}
+
+/* 弹窗样式 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 弹窗内容样式 */
+.modal-content {
+  background-color: white;
+  padding: 30rpx;
+  border-radius: 20rpx;
+  max-width: 90%;
+  max-height: 80%;
+  overflow-y: auto;
+  width: 600rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
+}
+
+/* 弹窗头部样式 */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 票务详情内容 */
+.ticket-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 30rpx;
+  width: 100%;
+}
+
+.ticket-image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 20rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.ticket-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.ticket-price {
+  font-size: 28rpx;
+  color: #FF5722;
+  font-weight: 500;
+  margin-bottom: 16rpx;
+}
+
+.ticket-description {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+  text-align: left;
+}
+
+/* 弹窗内容标题的文字样式 */
+.modal-section-title {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+  margin: 30rpx 0 16rpx;
+  padding-left: 16rpx;
+  border-left: 6rpx solid #4CAF50;
+}
+
+/* 弹窗内容的文字样式 */
+.modal-section-content {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+  padding: 0 16rpx;
+}
+
+/* 单行文本的文字样式 */
+.modal-section-content view {
+  margin-bottom: 12rpx;
+  position: relative;
+  padding-left: 20rpx;
+}
+
+.modal-section-content view::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #4CAF50;
+  font-size: 24rpx;
+}
+
+/* 客服电话样式 */
+.modal-section-content:last-child {
+  color: #4CAF50;
+  font-weight: 500;
+  font-size: 28rpx;
+}
+
+/* 关闭按钮样式 */
+.modal-close {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 弹窗按钮样式 */
+.modal-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.bottom-text{
+  height: 100px;
+  color: #555;      /* 设置深灰色 */
+}
+
+/* 悬浮窗中的数量选择器样式 */
+.modal .ticket-count {
+  display: flex;
+  align-items: center;
+  margin: 20rpx 0;
+  border-radius: 8rpx;
+  padding: 12rpx;
+  width: fit-content;
+  gap: 20rpx;
+  background-color: transparent;
+  text-align: left;
+}
+
+.modal .count-button {
+  width: 60rpx !important;
+  height: 60rpx !important;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32rpx;
+  line-height: 60rpx;
+  padding: 0 !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+.modal .count-button::after {
+  border: none !important;
+}

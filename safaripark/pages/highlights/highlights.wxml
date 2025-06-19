@@ -1,0 +1,56 @@
+<view class="container">
+  <view class="article">
+    <view class="title">探索杭州野生动物世界的精彩玩点</view>
+    <view class="subtitle">一场与野生动物的奇妙邂逅</view>
+    
+    <view class="section">
+      <view class="section-title">掠食险境：猛兽的王国</view>
+      <image class="section-image" src="https://img0.baidu.com/it/u=3663637814,2291648536&fm=253&fmt=auto&app=138&f=JPEG?w=190&h=190"></image>
+      <view class="section-content">
+        这里是猛兽的家园，汇聚了来自亚、美、非三大洲近30种猛兽。在开阔的活动场地和隐蔽的休息区，您可以远距离观察狮子、老虎、熊、美洲豹、猎豹、豹子、犀牛等猛兽的自然行为。它们或悠闲漫步，或威武巡视，展现着最真实的野性魅力。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">非洲顽猴：灵长类的乐园</view>
+      <image class="section-image" src="https://images.unsplash.com/photo-1555169062-013468b47731?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YW5pbWFsfGVufDB8fDB8fHww"></image>
+      <view class="section-content">
+        这里是灵长类动物的家园，狒狒、长尾猴、红毛猩猩、金丝猴等在这里自由活动。狒狒以其强壮的体格和群居的生活方式著称，长尾猴则以其灵活的身手和聪明的头脑闻名。在这里，您可以近距离观察这些与人类最接近的动物，感受它们的智慧和活力。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">中华国宝区：熊猫的乐园</view>
+      <image class="section-image" src="https://plus.unsplash.com/premium_photo-1664298849700-abbfe6f854d5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8JUU1JUE0JUE3JUU4JUIxJUExfGVufDB8fDB8fHww"></image>
+      <view class="section-content">
+        这里是国宝大熊猫的家园，在精心设计的熊猫馆和竹林环境中，您可以近距离观察这些憨态可掬的国宝。大熊猫以其温顺的性格和独特的黑白配色闻名，它们或悠闲地啃食竹子，或慵懒地打盹，展现着最自然的生活状态。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">非洲部落：草原的精灵</view>
+      <image class="section-image" src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGFuaW1hbHxlbnwwfHwwfHx8MA%3D%3D"></image>
+      <view class="section-content">
+        这里是草食性动物的乐园，在广阔的草原和树林中，您可以欣赏到鹿、羚羊、长颈鹿、斑马等动物的自由活动。长颈鹿以其优雅的姿态和独特的斑纹为特征，斑马则以其黑白相间的条纹而闻名。在这里，您可以感受到非洲草原的壮阔与生机。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">森林剧场：精彩的动物表演</view>
+      <image class="section-image" src="https://img1.baidu.com/it/u=2155878241,684812124&fm=253&fmt=auto&app=138&f=JPEG?w=200&h=200"></image>
+      <view class="section-content">
+        这里是动物表演的中心，每天都有精彩的动物秀上演。猴子、鹦鹉、海狮等动物将为您带来精彩的表演。猴子展示杂技和搞笑互动，鹦鹉展示语言天赋和才艺表演，海狮则带来水上表演和顶球绝技。在这里，您可以感受到动物们的聪明才智和与人类的默契配合。
+      </view>
+    </view>
+
+    <view class="tips">
+      <view class="tips-title">游玩小贴士</view>
+      <view class="tips-content">
+        <view class="tip-item">• 建议提前规划好游览路线，合理安排时间</view>
+        <view class="tip-item">• 请勿投喂动物，保持安全距离</view>
+        <view class="tip-item">• 注意查看表演时间表，不要错过精彩表演</view>
+        <view class="tip-item">• 园区内设有多个休息区和餐饮点，可以随时补充能量</view>
+      </view>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,117 @@
+@startuml 动物园管理系统完整Chen风格E-R图
+
+!define ENTITY(x) class x << (E,#FFAAAA) >>
+!define WEAK_ENTITY(x) class x << (W,#FFAAAA) >>
+!define RELATIONSHIP(x) class x << (R,#AAAEFF) >>
+!define ATTRIBUTE(x) class x << (A,#FFFFFF) >>
+!define KEY_ATTRIBUTE(x) class x << (K,#FFFFFF) >>
+!define MULTI_ATTRIBUTE(x) class x << (M,#FFFFFF) >>
+!define DERIVED_ATTRIBUTE(x) class x << (D,#FFFFFF) >>
+
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+}
+
+skinparam linetype ortho
+hide circle
+hide methods
+hide stereotypes
+
+' 实体
+ENTITY(动物园) #pale
+ENTITY(园区) #pale
+ENTITY(用户) #pale
+ENTITY(点位信息) #pale
+
+' 动物园属性
+KEY_ATTRIBUTE(动物园ID) #yellow
+ATTRIBUTE(名称) #lightblue
+ATTRIBUTE(城市) #lightblue
+ATTRIBUTE(地址) #lightblue
+ATTRIBUTE(开放时间) #lightblue
+ATTRIBUTE(联系电话) #lightblue
+ATTRIBUTE(简介) #lightblue
+
+' 园区属性
+KEY_ATTRIBUTE(园区ID) #yellow
+ATTRIBUTE(园区名称) #lightblue
+ATTRIBUTE(背景信息) #lightblue
+ATTRIBUTE(特色景点) #lightblue
+ATTRIBUTE(动物分布) #lightblue
+ATTRIBUTE(语音导览) #lightblue
+ATTRIBUTE(所属动物园ID) #lightgrey
+
+' 用户属性
+KEY_ATTRIBUTE(用户ID) #yellow
+ATTRIBUTE(用户名) #lightblue
+ATTRIBUTE(真实姓名) #lightblue
+ATTRIBUTE(手机号) #lightblue
+ATTRIBUTE(微信ID) #lightblue
+ATTRIBUTE(性别) #lightblue
+ATTRIBUTE(身份证号) #lightblue
+ATTRIBUTE(当前动物园ID) #lightgrey
+
+' 点位属性
+KEY_ATTRIBUTE(点位ID) #yellow
+ATTRIBUTE(点位名称) #lightblue
+ATTRIBUTE(纬度) #lightblue
+ATTRIBUTE(经度) #lightblue
+ATTRIBUTE(类别) #lightblue
+ATTRIBUTE(具体地址) #lightblue
+ATTRIBUTE(所属动物园ID2) #lightgrey
+
+' 关系
+RELATIONSHIP(包含1) #pink
+RELATIONSHIP(包含2) #pink
+RELATIONSHIP(访问) #pink
+
+' 连接实体和属性
+动物园 -- 动物园ID
+动物园 -- 名称
+动物园 -- 城市
+动物园 -- 地址
+动物园 -- 开放时间
+动物园 -- 联系电话
+动物园 -- 简介
+
+园区 -- 园区ID
+园区 -- 园区名称
+园区 -- 背景信息
+园区 -- 特色景点
+园区 -- 动物分布
+园区 -- 语音导览
+园区 -- 所属动物园ID
+
+用户 -- 用户ID
+用户 -- 用户名
+用户 -- 真实姓名
+用户 -- 手机号
+用户 -- 微信ID
+用户 -- 性别
+用户 -- 身份证号
+用户 -- 当前动物园ID
+
+点位信息 -- 点位ID
+点位信息 -- 点位名称
+点位信息 -- 纬度
+点位信息 -- 经度
+点位信息 -- 类别
+点位信息 -- 具体地址
+点位信息 -- 所属动物园ID2
+
+' 连接实体和关系
+动物园 -- 包含1
+园区 -- 包含1
+动物园 -- 包含2
+点位信息 -- 包含2
+动物园 -- 访问
+用户 -- 访问
+
+' 添加描述文本
+note "注：主键属性以黄色表示" as N1
+note "注：外键属性以灰色表示" as N2
+note "注：普通属性以蓝色表示" as N3
+
+@enduml 

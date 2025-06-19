@@ -1,0 +1,13 @@
+<view class="container">
+  <view class="header">
+    <text>动物识别与介绍</text>
+  </view>
+  <view class="content">
+    <button bindtap="takePhoto">拍照识别</button>
+    <view wx:if="{{animalInfo}}">
+      <text>动物名称：{{animalInfo.name}}</text>
+      <text>习性：{{animalInfo.habit}}</text>
+      <text>栖息地：{{animalInfo.habitat}}</text>
+    </view>
+  </view>
+</view>

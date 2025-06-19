@@ -1,0 +1,13 @@
+-- 预约表
+CREATE TABLE IF NOT EXISTS bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_number VARCHAR(32) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id INT NOT NULL,
+    park_id INT NOT NULL,
+    booking_time DATETIME NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (park_id) REFERENCES parks(id)
+); 

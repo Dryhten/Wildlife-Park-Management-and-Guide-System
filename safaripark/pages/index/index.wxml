@@ -1,0 +1,110 @@
+<view class="page-container">
+  <image class="background" src="{{currentBackground}}" />
+  <view class="city-selector">
+    <view class="city-selector-header" bindtap="toggleCityList">
+      <text>{{currentCity}}</text>
+      <image class="arrow-icon" src="/images/index_icon/arrow-down.png"></image>
+    </view>
+    <view class="city-dropdown" wx:if="{{showCityList}}">
+      <view class="city-dropdown-item" wx:for="{{cities}}" wx:key="*this" bindtap="selectCity" data-city="{{item}}">
+        <text>{{item}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="feedback-button" 
+            wx:if="{{showFloatingFeedback}}"
+            style="left: {{feedbackPosition.x}}px; top: {{feedbackPosition.y}}px;"
+            bindtouchstart="touchStart"
+            bindtouchmove="touchMove"
+            bindtouchend="touchEnd"
+            catchtap="goToFeedback">
+        <view class="close-button" catchtap="closeFloatingWindow">×</view>
+        <image src="/images/index_icon/feedback.png" class="feedback-icon"></image>
+        <text class="feedback-text">反馈</text>
+      </view>
+  <view class="container">
+    <view class="header">
+      <button class="guide-button" bindtap="goToNavigation">智慧地图导览</button>
+      <scan-button></scan-button>
+    </view>
+    <view class="content-box">
+      <view class="title-container">
+        <view class="title-group">
+          <text class="title">{{parkInfo.name}}</text>
+          <text class="address">{{parkInfo.address}}</text>
+          <text class="hours">{{parkInfo.hours}}</text>
+        </view>
+      </view>
+      <swiper class="swiper" indicator-dots="true" autoplay="true" interval="3000" circular="true" indicator-active-color="#4CAF50">
+        <block wx:for="{{swiperData}}" wx:key="index">
+          <swiper-item>
+            <image src="{{item}}" class="banner" />
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="icon-buttons">
+        <view class="icon-button" bindtap="goToTicketPage">
+          <image src="/images/index_icon/booking.png" class="icon" />
+          <text class="icon-text">在线预订</text>
+        </view>
+        <view class="icon-button" bindtap="goToParkbooking">
+          <image src="/images/index_icon/parkbooking.png" class="icon" />
+          <text class="icon-text">园区预约</text>
+        </view>
+        <view class="icon-button" bindtap="goToHighlights">
+          <image src="/images/index_icon/highlight.png" class="icon" />
+          <text class="icon-text">精彩玩点</text>
+        </view>
+        <view class="icon-button" bindtap="goToTraffic">
+          <image src="/images/index_icon/traffic.png" class="icon" />
+          <text class="icon-text">交通指南</text>
+        </view>
+        <view class="icon-button" bindtap="goToParkTraffic">
+          <image src="/images/index_icon/tips.png" class="icon" />
+          <text class="icon-text">实时流量</text>
+        </view>
+      </view>
+
+      <!-- 标签页 -->
+      <view class="tabBox">
+        <view class="navBox">
+          <view class="titleBox" wx:for="{{tabList}}" wx:key="index" bindtap="tabsOn" data-idx="{{item.index}}">
+            <text class="{{item.index == tabsId ? 'fontColorBox' : ''}}">{{item.title}}</text>
+          </view>
+        </view>
+        <view class="contentBox">
+          <view wx:if="{{tabsId === 0}}">
+            <scroll-view scroll-x="true" class="ticket-scroll">
+              <view class="ticket-cards">
+                <block wx:for="{{ticketData}}" wx:key="name">
+                  <view class="ticket-card" bindtap="goToTicketPage" data-tab-type="ticket">
+                    <image src="{{item.imageUrl}}" class="ticket-image" />
+                    <view class="ticket-info">
+                      <text class="ticket-title">{{item.name}}</text>
+                      <text class="ticket-price">￥{{item.price}}</text>
+                    </view>
+                  </view>
+                </block>
+              </view>
+            </scroll-view>
+          </view>
+          <view wx:if="{{tabsId === 1}}">
+            <scroll-view scroll-x="true" class="ticket-scroll">
+              <view class="ticket-cards">
+                <block wx:for="{{annualCardData}}" wx:key="name">
+                  <view class="ticket-card" bindtap="goToTicketPage" data-tab-type="annualCard">
+                    <image src="{{item.imageUrl}}" class="ticket-image" />
+                    <view class="ticket-info">
+                      <text class="ticket-title">{{item.name}}</text>
+                      <text class="ticket-price">￥{{item.price}}</text>
+                    </view>
+                  </view>
+                </block>
+              </view>
+            </scroll-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

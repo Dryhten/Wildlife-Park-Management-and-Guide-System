@@ -1,0 +1,50 @@
+<view class="poi-list-container">
+  <view class="poi-list-header">
+    <text>精彩玩点</text>
+  </view>
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input 
+      class="search-input" 
+      placeholder="搜索地点" 
+      bindinput="onSearchInput"
+      value="{{searchKeyword}}"
+    />
+    <icon class="search-icon" type="search" size="16"></icon>
+  </view>
+  
+  <!-- 排序方式提示 -->
+  <view class="sort-info">
+    <text wx:if="{{isPersonalized}}">根据您喜爱的动物为您推荐</text>
+    <text wx:else>按距离排序</text>
+  </view>
+  
+  <scroll-view 
+    scroll-y 
+    class="poi-list" 
+    bindscrolltolower="onReachBottom"
+  >
+    <view class="poi-card" wx:for="{{displayPois}}" wx:key="id" bindtap="onPoiTap" data-poi="{{item}}">
+      <view class="poi-info">
+        <view class="poi-name">{{item.name}}</view>
+        <view class="poi-category">{{item.category}}</view>
+        <view class="poi-distance" wx:if="{{item.distance !== null}}">
+          <image class="distance-icon" src="/images/map_icon/distance.png"></image>
+          <text>{{item.distance}}米</text>
+        </view>
+        <!-- 显示相关度指示器 -->
+        <view class="poi-relevance" wx:if="{{isPersonalized && item.relevanceScore > 0}}">
+          <text class="relevance-tag">与您喜爱的动物相关</text>
+        </view>
+      </view>
+      <image class="arrow-icon" src="/images/map_icon/arrow_right.png"></image>
+    </view>
+    <!-- 加载更多提示 -->
+    <view class="loading-more" wx:if="{{hasMore}}">
+      <text>上拉加载更多</text>
+    </view>
+    <view class="loading-more" wx:else>
+      <text>没有更多了</text>
+    </view>
+  </scroll-view>
+</view> 

@@ -1,0 +1,72 @@
+digraph ER {
+    // 图的全局设置
+    splines=spline;
+    node [fontname="Microsoft YaHei", fontsize=14];
+    edge [fontname="Microsoft YaHei", fontsize=14];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+10,10";
+    
+    // 动物园表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    zoos [label="园区信息表", pos="0,2!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    zoo_id [label=<<u>园区ID</u>>, pos="0,2.8!"];
+    zoo_name [label="园区名称", pos="1.2,2.4!"];
+    zoo_city [label="城市", pos="1.5,1.8!"];
+    zoo_address [label="地址", pos="0.8,1.4!"];
+    zoo_hours [label="开放时间", pos="0,1.2!"];
+    zoo_phone [label="联系电话", pos="-0.8,1.4!"];
+    zoo_desc [label="背景信息", pos="-1.5,1.8!"];
+    zoo_created [label="创建时间", pos="-1.2,2.4!"];
+
+    // 园区表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    parks [label="园区地理范围表", pos="-2,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    park_id [label=<<u>园区ID</u>>, pos="-2,-0.2!"];
+    park_zoo_id [label="园区ID", pos="-1,-0.6!"];
+    park_name [label="名称", pos="-0.8,-1!"];
+    park_background [label="背景信息", pos="-1,-1.4!"];
+    park_features [label="特色景点", pos="-2,-1.8!"];
+    park_distribution [label="动物分布", pos="-3,-1.4!"];
+    park_guide [label="语音导览", pos="-3.2,-1!"];
+    park_created [label="创建时间", pos="-3,-0.6!"];
+
+    // 园区地理范围表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    park_geometries [label="园区流量表", pos="2,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    geo_id [label=<<u>流量统计ID</u>>, pos="2,-0.2!"];
+    geo_park_id [label="园区ID", pos="3,-0.6!"];
+    geo_geometry [label="当前排队人数", pos="3.2,-1!"];
+    geo_created [label="更新时间", pos="3,-1.4!"];
+
+    // 关系节点
+    node [shape=diamond, style="filled", fillcolor=white, fontsize=14];
+    zoo_park_rel [label="包含", pos="-1,0.5!"];
+    park_geo_rel [label="统计", pos="0,-1!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=black, fontsize=14];
+    
+    // 动物园表的属性连接
+    zoos -> {zoo_id zoo_name zoo_city zoo_address zoo_hours 
+             zoo_phone zoo_desc zoo_created};
+             
+    // 园区表的属性连接
+    parks -> {park_id park_zoo_id park_name park_background park_features 
+              park_distribution park_guide park_created};
+              
+    // 园区地理范围表的属性连接
+    park_geometries -> {geo_id geo_park_id geo_geometry geo_created};
+
+    // 实体间的关系（通过关系节点）
+    edge [dir=none, color=black, constraint=false, fontsize=14];
+    zoos -> zoo_park_rel [label="1"];
+    zoo_park_rel -> parks [label="N"];
+    parks -> park_geo_rel [label="1"];
+    park_geo_rel -> park_geometries [label="N"];
+} 

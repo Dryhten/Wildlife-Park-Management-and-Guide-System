@@ -1,0 +1,54 @@
+<view class="park-container">
+  <view class="park-list">
+    <view class="park-card" wx:for="{{parkList}}" wx:key="parkId" bindtap="showParkDetail" data-park="{{item}}">
+      <view class="park-info">
+        <view class="park-name">{{item.parkName}}</view>
+        <view class="park-stats">
+          <text>园内人数: {{item.currentPeople}}</text>
+          <text>排队人数: {{item.queuePeople}}</text>
+        </view>
+      </view>
+      <button 
+        class="{{item.isBooked ? 'cancel-btn' : 'book-btn'}}"
+        catchtap="handleBooking"
+        data-park-id="{{item.parkId}}"
+        data-is-booked="{{item.isBooked}}"
+      >
+        {{item.isBooked ? '取消预约' : '预约'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 园区详情弹窗 -->
+  <view class="modal {{showDetail ? 'show' : ''}}" catchtap="hideDetail">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">{{currentPark.parkName}}</text>
+        <view class="close-btn" bindtap="hideDetail">×</view>
+      </view>
+      <view class="modal-body">
+        <view class="detail-section">
+          <view class="section-title">背景信息</view>
+          <view class="section-content">{{currentPark.background}}</view>
+        </view>
+        <view class="detail-section">
+          <view class="section-title">特色景点</view>
+          <view class="section-content">{{currentPark.features}}</view>
+        </view>
+        <view class="detail-section">
+          <view class="section-title">动物分布</view>
+          <view class="animal-list">
+            <view class="animal-item" wx:for="{{currentPark.animalDistribution}}" wx:key="*this">
+              <text>{{item}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="detail-section">
+          <view class="section-title">介绍</view>
+          <view class="section-content">{{currentPark.audioGuide}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+

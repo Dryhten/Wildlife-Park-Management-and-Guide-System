@@ -1,0 +1,83 @@
+.page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+.background {
+  width: 100%;
+  height: 400rpx;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.personal-info {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  margin-top: 400rpx;
+}
+
+.header {
+  position: relative;
+}
+
+.avatar {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -50rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.info-list {
+  margin-top: 60rpx;
+  padding: 20rpx;
+  background-color: #fff;
+  border-radius: 10rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1px solid #eee;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.picker {
+  flex: 1;
+  text-align: right;
+  color: #333;
+  padding-right: 20rpx; /* 确保与输入框对齐 */
+}
+
+.save-button {
+  margin-top: 20rpx;
+  width: 80%;
+  padding: 15rpx;
+  background-color: #FF7B00;
+  color: #fff;
+  border: none;
+  border-radius: 25rpx;
+  font-size: 32rpx;
+}
+
+.footer {
+  margin-top: 20rpx;
+  color: #4CAF50;
+}
+
+.name {
+  font-size: 32rpx;
+  color: #333;
+} 

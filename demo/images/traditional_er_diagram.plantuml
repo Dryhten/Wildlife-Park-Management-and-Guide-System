@@ -1,0 +1,187 @@
+@startuml 动物园管理系统传统E-R图
+
+' 设置样式
+skinparam linetype ortho
+skinparam backgroundColor white
+skinparam nodesep 80
+skinparam ranksep 80
+
+' 实体定义
+entity "动物园(zoos)" as zoos {
+  * <u>id</u>
+  --
+  name
+  city
+  address
+  opening_hours
+  contact_phone
+  description
+}
+
+entity "园区(parks)" as parks {
+  * <u>id</u>
+  --
+  zoo_id
+  name
+  background
+  features
+  animal_distribution
+  audio_guide
+}
+
+entity "点位信息(park_poi)" as park_poi {
+  * <u>id</u>
+  --
+  zoo_id
+  name
+  latitude
+  longitude
+  category
+  address
+}
+
+entity "园区地理范围(park_geometries)" as park_geometries {
+  * <u>id</u>
+  --
+  park_id
+  geometry
+}
+
+entity "用户(users)" as users {
+  * <u>id</u>
+  --
+  name
+  real_name
+  phone
+  openid
+  session_key
+  preference
+  gender
+  id_number
+  current_zoo_id
+}
+
+entity "用户偏好(user_preferences)" as user_preferences {
+  * <u>id</u>
+  --
+  user_id
+  is_personalized
+  transport_mode
+  favorite_animals
+}
+
+entity "动物信息(animals)" as animals {
+  * <u>id</u>
+  --
+  name
+  english_name
+  scientific_name
+  habitat
+  behavior
+  conservation_status
+  description
+}
+
+entity "安全预警(safety_alerts)" as safety_alerts {
+  * <u>id</u>
+  --
+  user_id
+  zone_id
+  alert_time
+  status
+}
+
+entity "危险区域(danger_zones)" as danger_zones {
+  * <u>id</u>
+  --
+  name
+  description
+  geometry
+  risk_level
+  status
+}
+
+entity "园区预订(bookings)" as bookings {
+  * <u>id</u>
+  --
+  user_id
+  park_id
+  booking_time
+  status
+}
+
+entity "园区流量(park_traffic)" as park_traffic {
+  * <u>id</u>
+  --
+  park_id
+  current_people
+  queue_people
+}
+
+entity "动物表演(performances)" as performances {
+  * <u>id</u>
+  --
+  title
+  duration
+  location
+  description
+  image_url
+  park_id
+  show_time
+  show_date
+  status
+  max_capacity
+  current_bookings
+}
+
+entity "表演预约(performance_bookings)" as performance_bookings {
+  * <u>id</u>
+  --
+  user_id
+  performance_id
+  status
+  booking_time
+}
+
+entity "用户反馈(feedbacks)" as feedbacks {
+  * <u>id</u>
+  --
+  user_id
+  name
+  contact
+  content
+  rating
+}
+
+entity "订单信息(orders)" as orders {
+  * <u>id</u>
+  --
+  order_number
+  user_id
+  item_name
+  quantity
+  total_amount
+  contact_name
+  contact_phone
+  visit_date
+  status
+}
+
+' 关系定义
+zoos ||--o{ parks : "包含"
+zoos ||--o{ park_poi : "包含"
+zoos ||--o{ users : "被访问"
+parks ||--o{ park_geometries : "定义边界"
+users ||--o| user_preferences : "设置"
+users ||--o{ bookings : "预约"
+users ||--o{ performance_bookings : "预约"
+users ||--o{ feedbacks : "提交"
+users ||--o{ orders : "创建"
+users ||--o{ safety_alerts : "接收"
+parks ||--o{ bookings : "接收预约"
+parks ||--o{ performances : "举办"
+parks ||--o| park_traffic : "监控"
+performances ||--o{ performance_bookings : "被预约"
+parks ||--o{ safety_alerts : "监控区域"
+
+@enduml 

@@ -1,0 +1,58 @@
+digraph ER {
+    // 图的全局设置
+    splines=spline;
+    node [fontname="Microsoft YaHei", fontsize=14];
+    edge [fontname="Microsoft YaHei", fontsize=14];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+5,5";
+    
+    // 动物园表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    zoos [label="动物园表", pos="0,1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    zoo_id [label=<<u>动物园ID</u>>, pos="0,1.4!"];
+    zoo_name [label="动物园名称", pos="0.6,1.3!"];
+    zoo_city [label="所在城市", pos="0.8,1!"];
+    zoo_address [label="详细地址", pos="0.6,0.7!"];
+    zoo_hours [label="开放时间", pos="0,0.6!"];
+    zoo_phone [label="联系电话", pos="-0.6,0.7!"];
+    zoo_desc [label="动物园简介", pos="-0.8,1!"];
+    zoo_created [label="创建时间", pos="-0.6,1.3!"];
+    zoo_updated [label="更新时间", pos="-0.3,1.4!"];
+
+    // 园区信息表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    parks [label="园区信息表", pos="0,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    park_id [label=<<u>园区ID</u>>, pos="0,-0.6!"];
+    park_zoo_id [label="动物园ID", pos="0.6,-0.7!"];
+    park_name [label="园区名称", pos="0.8,-1!"];
+    park_background [label="背景信息", pos="0.6,-1.3!"];
+    park_features [label="特色景点", pos="0,-1.4!"];
+    park_distribution [label="动物分布", pos="-0.6,-1.3!"];
+    park_guide [label="语音导览", pos="-0.8,-1!"];
+    park_created [label="创建时间", pos="-0.6,-0.7!"];
+
+    // 关系节点
+    node [shape=diamond, style="filled", fillcolor=white, fontsize=14];
+    zoo_park_rel [label="包含", pos="0,0!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=black, fontsize=14];
+    
+    // 动物园表的属性连接
+    zoos -> {zoo_id zoo_name zoo_city zoo_address zoo_hours 
+             zoo_phone zoo_desc zoo_created zoo_updated};
+             
+    // 园区信息表的属性连接
+    parks -> {park_id park_zoo_id park_name park_background park_features 
+              park_distribution park_guide park_created};
+
+    // 实体间的关系（通过关系节点）
+    edge [dir=none, color=black, constraint=false, fontsize=14];
+    zoos -> zoo_park_rel [label="1"];
+    zoo_park_rel -> parks [label="N"];
+} 

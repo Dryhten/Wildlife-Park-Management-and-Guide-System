@@ -1,0 +1,130 @@
+@startuml 动物园管理系统Chen风格E-R图
+
+' 设置样式
+skinparam backgroundColor white
+skinparam nodesep 80
+skinparam ranksep 90
+skinparam roundcorner 20
+skinparam defaultFontSize 14
+skinparam defaultFontName Arial
+skinparam arrowColor black
+skinparam entityBorderColor black
+skinparam linetype ortho
+
+' 自定义形状
+!define ENTITY(name) class name << (E,LightGreen) >> 
+!define ATTRIBUTE(name) class name << (A,LightBlue) >>
+!define RELATIONSHIP(name) class name << (R,Pink) >>
+!define PK_ATTRIBUTE(name) class name << (K,Yellow) >>
+!define FK_ATTRIBUTE(name) class name << (F,LightGrey) >>
+
+' 实体
+ENTITY(Zoos) {
+}
+
+ENTITY(Parks) {
+}
+
+ENTITY(Users) {
+}
+
+ENTITY(ParkPOI) {
+}
+
+' 部分属性 (演示用，实际图表需要包含全部属性)
+' 动物园属性
+PK_ATTRIBUTE(ZooID)
+ATTRIBUTE(ZooName)
+ATTRIBUTE(ZooCity)
+ATTRIBUTE(ZooAddress)
+ATTRIBUTE(ZooOpeningHours)
+ATTRIBUTE(ZooContactPhone)
+ATTRIBUTE(ZooDescription)
+
+' 园区属性
+PK_ATTRIBUTE(ParkID)
+FK_ATTRIBUTE(ParkZooID)
+ATTRIBUTE(ParkName)
+ATTRIBUTE(ParkBackground)
+ATTRIBUTE(ParkFeatures)
+ATTRIBUTE(ParkAnimalDistribution)
+ATTRIBUTE(ParkAudioGuide)
+
+' 用户属性
+PK_ATTRIBUTE(UserID)
+ATTRIBUTE(UserName)
+ATTRIBUTE(UserRealName)
+ATTRIBUTE(UserPhone)
+ATTRIBUTE(UserOpenid)
+ATTRIBUTE(UserSessionKey)
+ATTRIBUTE(UserPreference)
+ATTRIBUTE(UserGender)
+ATTRIBUTE(UserIDNumber)
+FK_ATTRIBUTE(UserCurrentZooID)
+
+' POI属性
+PK_ATTRIBUTE(POIID)
+FK_ATTRIBUTE(POIZooID)
+ATTRIBUTE(POIName)
+ATTRIBUTE(POILatitude)
+ATTRIBUTE(POILongitude)
+ATTRIBUTE(POICategory)
+ATTRIBUTE(POIAddress)
+
+' 关系
+RELATIONSHIP(Contains1) {
+}
+
+RELATIONSHIP(Contains2) {
+}
+
+RELATIONSHIP(VisitedBy) {
+}
+
+' 连接实体和主键
+Zoos -- ZooID
+Parks -- ParkID
+Users -- UserID
+ParkPOI -- POIID
+
+' 连接实体和属性
+Zoos -- ZooName
+Zoos -- ZooCity
+Zoos -- ZooAddress
+Zoos -- ZooOpeningHours
+Zoos -- ZooContactPhone
+Zoos -- ZooDescription
+
+Parks -- ParkZooID
+Parks -- ParkName
+Parks -- ParkBackground
+Parks -- ParkFeatures
+Parks -- ParkAnimalDistribution
+Parks -- ParkAudioGuide
+
+Users -- UserName
+Users -- UserRealName
+Users -- UserPhone
+Users -- UserOpenid
+Users -- UserSessionKey
+Users -- UserPreference
+Users -- UserGender
+Users -- UserIDNumber
+Users -- UserCurrentZooID
+
+ParkPOI -- POIZooID
+ParkPOI -- POIName
+ParkPOI -- POILatitude
+ParkPOI -- POILongitude
+ParkPOI -- POICategory
+ParkPOI -- POIAddress
+
+' 连接实体和关系
+Zoos -- Contains1
+Parks -- Contains1
+Zoos -- Contains2
+ParkPOI -- Contains2
+Zoos -- VisitedBy
+Users -- VisitedBy
+
+@enduml 

@@ -1,0 +1,84 @@
+digraph ER {
+    // 图的全局设置
+    rankdir=TB;
+    splines=spline;
+    node [fontname="Microsoft YaHei"];
+    edge [fontname="Microsoft YaHei"];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+25,25";
+    
+    // 园区表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+    parks [label="园区表\nparks", pos="0,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    park_id [label="园区ID", pos="0,2!"];
+    park_name [label="名称", pos="1.5,1.5!"];
+    park_background [label="背景信息", pos="2,0!"];
+    park_features [label="特色景点", pos="1.5,-1.5!"];
+    park_distribution [label="动物分布", pos="0,-2!"];
+    park_guide [label="语音导览", pos="-1.5,-1.5!"];
+    park_created [label="创建时间", pos="-2,0!"];
+
+    // 表演表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+    performances [label="表演表\nperformances", pos="8,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    perf_id [label="表演ID", pos="8,2!"];
+    perf_park_id [label="园区ID(FK)", pos="9.5,1.5!"];
+    perf_title [label="表演名称", pos="10,0!"];
+    perf_duration [label="演出时长", pos="9.5,-1.5!"];
+    perf_location [label="演出地点", pos="8,-2!"];
+    perf_time [label="表演时间", pos="6.5,-1.5!"];
+    perf_capacity [label="最大人数", pos="6,0!"];
+    perf_status [label="状态", pos="6.5,1.5!"];
+
+    // 表演预约表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+    performance_bookings [label="表演预约表\nperformance_bookings", pos="16,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    booking_id [label="预约ID", pos="16,2!"];
+    booking_perf_id [label="表演ID(FK)", pos="17.5,1.5!"];
+    booking_user_id [label="用户ID(FK)", pos="18,0!"];
+    booking_status [label="预约状态", pos="17.5,-1.5!"];
+    booking_time [label="预约时间", pos="16,-2!"];
+    booking_created [label="创建时间", pos="14.5,-1.5!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=gray];
+    
+    // 园区表的属性连接
+    parks -> {park_id park_name park_background park_features 
+              park_distribution park_guide park_created};
+              
+    // 表演表的属性连接
+    performances -> {perf_id perf_park_id perf_title perf_duration 
+                    perf_location perf_time perf_capacity perf_status};
+                    
+    // 表演预约表的属性连接
+    performance_bookings -> {booking_id booking_perf_id booking_user_id 
+                           booking_status booking_time booking_created};
+
+    // 实体间的关系（外键）
+    edge [dir=both, arrowhead=crow, arrowtail=none, color=blue, constraint=false];
+    parks -> performances [label="1:n"];
+    performances -> performance_bookings [label="1:n"];
+
+    // 标题
+    label = "图3: 园区-表演-预约关系图"
+    labelloc = "t"
+    fontsize = 20
+
+    // 图例
+    subgraph cluster_legend {
+        label="图例说明";
+        node [shape=box, style="rounded,filled", fillcolor=lightblue];
+        legend_entity [label="实体"];
+        node [shape=ellipse, style="filled", fillcolor=white];
+        legend_attribute [label="属性"];
+        edge [dir=both, arrowhead=crow, arrowtail=none, color=blue];
+        legend_relation [label="关系"];
+    }
+} 

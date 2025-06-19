@@ -1,0 +1,81 @@
+<view class="page-container">
+  <image class="background" src="https://static.vecteezy.com/system/resources/previews/013/074/425/non_2x/flat-exotic-animal-background-free-vector.jpg" />
+  <view class="user-info">
+    <view wx:if="{{!isLoggedIn}}">
+      <!-- 显示登录按钮 -->
+      <button class="login-button" bindtap="goToLogin">点击登录</button>
+    </view>
+
+    <view wx:if="{{isLoggedIn}}" class="user-info-content">
+      <!-- 头像、昵称、认证状态 -->
+      <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+      <view class="user-details">
+        <text class="user-name">{{userInfo.name || '微信用户'}}</text>
+        <text class="user-status {{userInfo.status === '已认证' ? 'verified' : 'unverified'}}">{{userInfo.status}}</text>
+      </view>
+      <!-- 设置按钮，放在最右边 -->
+      <image class="settings-icon" src="../../images/mine/setting.png" bindtap="goToPersonalInfo" />
+    </view>
+  </view>
+
+  <!-- 绑定提示与绑定按钮 -->
+  <view class="bind-container" wx:if="{{isLoggedIn && !userInfo.phone}}">
+    <view class="bind-prompt">
+      <text>绑定手机号成为会员，更多优惠等着你哦！</text>
+    </view>
+    <button class="bind-button" bindtap="goToBind">去绑定</button>
+  </view>
+
+  <!-- 我的订单 -->
+  <view class="order-card">
+    <view class="order-header">
+      <text>我的订单</text>
+      <navigator class="view-all-orders" url="/pages/order/order">
+        <text>查看全部订单 ></text>
+      </navigator>
+    </view>
+    <view class="order-icons">
+      <view class="order-item" bindtap="goToOrders" data-status="待支付">
+        <image src="../../images/mine/wallet.png" style="width: 30px; height: 30px;"/>
+        <text>待支付</text>
+      </view>
+      <view class="order-item" bindtap="goToOrders" data-status="待出行">
+        <image src="../../images/mine/file.png" style="width: 30px; height: 30px;" />
+        <text>待出行</text>
+      </view>
+      <view class="order-item" bindtap="goToOrders" data-status="已完成">
+        <image src="../../images/mine/checked.png" style="width: 30px; height: 30px;" />
+        <text>已完成</text>
+      </view>
+      <view class="order-item" bindtap="goToOrders" data-status="已退单">
+        <image src="../../images/mine/return.png" style="width: 30px; height: 30px;" />
+        <text>已退单</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 更多功能 -->
+  <view class="more-functions-card">
+    <view class="function-item" bindtap="goToPerformancebooking">
+      <image src="../../images/mine/note.png" style="width: 30px; height: 30px;margin-right: 10rpx;" />
+      <text>我的表演预约</text>
+    </view>
+    <view class="function-item" bindtap="goToPerference">
+      <image src="../../images/mine/personalized.png" style="width: 30px; height: 30px;margin-right: 10rpx;" />
+      <text>个性化设置</text>
+    </view>
+    <view class="function-item" bindtap="goToContact">
+      <image src="../../images/mine/contact.png" style="width: 30px; height: 30px;margin-right: 10rpx;" />
+      <text>联系客服</text>
+    </view>
+    <view class="function-item" bindtap="goToShare">
+      <image src="../../images/mine/share.png" style="width: 30px; height: 30px;margin-right: 10rpx;" />
+      <text>分享</text>
+    </view>
+  </view>
+
+  <!-- 底部Logo -->
+  <view class="footer-logo">
+    <text>野生动物乐园版权所有</text>
+  </view>
+</view>

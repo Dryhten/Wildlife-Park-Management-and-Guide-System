@@ -1,0 +1,76 @@
+digraph ER {
+    // 图的全局设置
+    splines=spline;
+    node [fontname="Microsoft YaHei", fontsize=14];
+    edge [fontname="Microsoft YaHei", fontsize=14];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+10,10";
+    
+    // 动物园表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    zoos [label="动物园表", pos="0,2!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    zoo_id [label=<<u>动物园ID</u>>, pos="0,2.8!"];
+    zoo_name [label="动物园名称", pos="1.2,2.4!"];
+    zoo_city [label="所在城市", pos="1.5,1.8!"];
+    zoo_address [label="详细地址", pos="0.8,1.4!"];
+    zoo_hours [label="开放时间", pos="0,1.2!"];
+    zoo_phone [label="联系电话", pos="-0.8,1.4!"];
+    zoo_desc [label="动物园简介", pos="-1.5,1.8!"];
+    zoo_created [label="创建时间", pos="-1.2,2.4!"];
+
+    // 点位信息表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    park_poi [label="点位信息表", pos="-2,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    poi_id [label=<<u>点位ID</u>>, pos="-2,-0.2!"];
+    poi_zoo_id [label="动物园ID", pos="-1,-0.6!"];
+    poi_name [label="名称", pos="-0.8,-1!"];
+    poi_latitude [label="纬度", pos="-1,-1.4!"];
+    poi_longitude [label="经度", pos="-2,-1.8!"];
+    poi_category [label="类别", pos="-3,-1.4!"];
+    poi_address [label="地址", pos="-3.2,-1!"];
+
+    // 动物信息表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    animals [label="动物信息表", pos="2,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    animal_id [label=<<u>动物ID</u>>, pos="2,-0.2!"];
+    animal_name [label="动物名称", pos="3,-0.6!"];
+    animal_ename [label="英文名称", pos="3.2,-1!"];
+    animal_sname [label="拉丁学名", pos="3,-1.4!"];
+    animal_habitat [label="栖息地", pos="2,-1.8!"];
+    animal_behavior [label="习性", pos="1,-1.4!"];
+    animal_status [label="保护状态", pos="1,-1!"];
+    animal_desc [label="动物介绍", pos="1.2,-0.6!"];
+
+    // 关系节点
+    node [shape=diamond, style="filled", fillcolor=white, fontsize=14];
+    zoo_poi_rel [label="包含", pos="-1,0.5!"];
+    zoo_animal_rel [label="展示", pos="1,0.5!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=black, fontsize=14];
+    
+    // 动物园表的属性连接
+    zoos -> {zoo_id zoo_name zoo_city zoo_address zoo_hours 
+             zoo_phone zoo_desc zoo_created};
+             
+    // 点位信息表的属性连接
+    park_poi -> {poi_id poi_zoo_id poi_name poi_latitude poi_longitude 
+                 poi_category poi_address};
+               
+    // 动物信息表的属性连接
+    animals -> {animal_id animal_name animal_ename animal_sname animal_habitat 
+                animal_behavior animal_status animal_desc};
+
+    // 实体间的关系（通过关系节点）
+    edge [dir=none, color=black, constraint=false, fontsize=14];
+    zoos -> zoo_poi_rel [label="1"];
+    zoo_poi_rel -> park_poi [label="N"];
+    zoos -> zoo_animal_rel [label="1"];
+    zoo_animal_rel -> animals [label="N"];
+} 

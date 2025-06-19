@@ -1,0 +1,25 @@
+<view class="payment-container">
+  <view class="timer-section">
+    <text class="timer">支付剩余时间：{{minutes}}:{{seconds}}</text>
+  </view>
+
+  <view class="amount-section">
+    <text class="amount-label">需支付金额</text>
+    <text class="amount">¥{{totalAmount}}</text>
+  </view>
+
+  <view class="payment-methods">
+    <text class="section-title">选择支付方式</text>
+    <radio-group bindchange="onPaymentMethodChange">
+      <view class="payment-method-item" wx:for="{{paymentMethods}}" wx:key="index">
+        <radio value="{{item}}" checked="{{item === selectedMethod}}"/>
+        <text>{{item}}</text>
+      </view>
+    </radio-group>
+  </view>
+
+  <view class="button-group">
+    <button class="cancel-btn" bindtap="cancelPayment">暂不支付</button>
+    <button class="pay-btn" bindtap="confirmPayment">确认支付</button>
+  </view>
+</view> 

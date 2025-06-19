@@ -1,0 +1,201 @@
+@startuml 动物园管理系统E-R图
+
+!define Table(name,desc) class name as "desc" << (T,#FFAAAA) >>
+!define primary_key(x) <b>x</b>
+!define foreign_key(x) <u>x</u>
+!define column(x) <i>x</i>
+
+' 实体定义
+Table(zoos, "zoos\n(动物园表)") {
+  primary_key(id) INT
+  column(name) VARCHAR
+  column(city) VARCHAR
+  column(address) VARCHAR
+  column(opening_hours) VARCHAR
+  column(contact_phone) VARCHAR
+  column(description) TEXT
+}
+
+Table(parks, "parks\n(园区表)") {
+  primary_key(id) INT
+  foreign_key(zoo_id) INT
+  column(name) VARCHAR
+  column(background) TEXT
+  column(features) TEXT
+  column(animal_distribution) JSON
+  column(audio_guide) TEXT
+}
+
+Table(park_poi, "park_poi\n(点位信息表)") {
+  primary_key(id) VARCHAR
+  foreign_key(zoo_id) INT
+  column(name) VARCHAR
+  column(latitude) DECIMAL
+  column(longitude) DECIMAL
+  column(category) VARCHAR
+  column(address) VARCHAR
+}
+
+Table(park_geometries, "park_geometries\n(园区地理范围表)") {
+  primary_key(id) INT
+  foreign_key(park_id) INT
+  column(geometry) TEXT
+}
+
+Table(users, "users\n(用户表)") {
+  primary_key(id) INT
+  column(name) VARCHAR
+  column(real_name) VARCHAR
+  column(phone) VARCHAR
+  column(openid) VARCHAR
+  column(session_key) VARCHAR
+  column(preference) JSON
+  column(gender) VARCHAR
+  column(id_number) VARCHAR
+  foreign_key(current_zoo_id) INT
+}
+
+Table(user_preferences, "user_preferences\n(用户偏好表)") {
+  primary_key(id) INT
+  foreign_key(user_id) INT
+  column(is_personalized) BOOLEAN
+  column(transport_mode) VARCHAR
+  column(favorite_animals) JSON
+}
+
+Table(animals, "animals\n(动物信息表)") {
+  primary_key(id) INT
+  column(name) VARCHAR
+  column(english_name) VARCHAR
+  column(scientific_name) VARCHAR
+  column(habitat) VARCHAR
+  column(behavior) TEXT
+  column(conservation_status) ENUM
+  column(description) TEXT
+}
+
+Table(safety_alerts, "safety_alerts\n(安全预警表)") {
+  primary_key(id) INT
+  foreign_key(user_id) INT
+  foreign_key(zone_id) INT
+  column(alert_time) TIMESTAMP
+  column(status) ENUM
+}
+
+Table(danger_zones, "danger_zones\n(危险区域表)") {
+  primary_key(id) INT
+  column(name) VARCHAR
+  column(description) TEXT
+  column(geometry) TEXT
+  column(risk_level) TINYINT
+  column(status) TINYINT
+}
+
+Table(bookings, "bookings\n(园区预订表)") {
+  primary_key(id) INT
+  foreign_key(user_id) INT
+  foreign_key(park_id) INT
+  column(booking_time) TIMESTAMP
+  column(status) ENUM
+}
+
+Table(park_traffic, "park_traffic\n(园区流量表)") {
+  primary_key(id) INT
+  foreign_key(park_id) INT
+  column(current_people) INT
+  column(queue_people) INT
+}
+
+Table(performances, "performances\n(动物表演表)") {
+  primary_key(id) INT
+  column(title) VARCHAR
+  column(duration) VARCHAR
+  column(location) VARCHAR
+  column(description) TEXT
+  column(image_url) VARCHAR
+  foreign_key(park_id) INT
+  column(show_time) TIME
+  column(show_date) DATE
+  column(status) TINYINT
+  column(max_capacity) INT
+  column(current_bookings) INT
+}
+
+Table(performance_bookings, "performance_bookings\n(表演预约表)") {
+  primary_key(id) INT
+  foreign_key(user_id) INT
+  foreign_key(performance_id) INT
+  column(status) ENUM
+  column(booking_time) TIMESTAMP
+}
+
+Table(feedbacks, "feedbacks\n(用户反馈表)") {
+  primary_key(id) INT
+  foreign_key(user_id) INT
+  column(name) VARCHAR
+  column(contact) VARCHAR
+  column(content) TEXT
+  column(rating) INT
+}
+
+Table(orders, "orders\n(订单信息表)") {
+  primary_key(id) INT
+  column(order_number) VARCHAR
+  foreign_key(user_id) INT
+  column(item_name) VARCHAR
+  column(quantity) INT
+  column(total_amount) DECIMAL
+  column(contact_name) VARCHAR
+  column(contact_phone) VARCHAR
+  column(visit_date) DATE
+  column(status) ENUM
+}
+
+' 关系定义
+
+' 动物园与园区
+zoos "1" -- "*" parks : contains >
+
+' 动物园与POI点
+zoos "1" -- "*" park_poi : contains >
+
+' 用户与动物园
+zoos "1" -- "*" users : visited by >
+
+' 园区与地理范围
+parks "1" -- "1..* " park_geometries : defined by >
+
+' 用户与偏好
+users "1" -- "0..1" user_preferences : has >
+
+' 用户与预约
+users "1" -- "*" bookings : makes >
+
+' 用户与表演预约
+users "1" -- "*" performance_bookings : books >
+
+' 用户与反馈
+users "1" -- "*" feedbacks : gives >
+
+' 用户与订单
+users "1" -- "*" orders : places >
+
+' 用户与安全预警
+users "1" -- "*" safety_alerts : receives >
+
+' 园区与预约
+parks "1" -- "*" bookings : receives >
+
+' 园区与表演
+parks "1" -- "*" performances : hosts >
+
+' 园区与流量
+parks "1" -- "0..1" park_traffic : has >
+
+' 表演与预约
+performances "1" -- "*" performance_bookings : booked via >
+
+' 安全预警与园区(作为危险区域)
+parks "1" -- "*" safety_alerts : monitors >
+
+@enduml 

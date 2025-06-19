@@ -1,0 +1,59 @@
+<view class="container">
+  <!-- 顶部显示选择的日期 -->
+  <view class="date-section">
+    <text class="section-title">选择日期：{{selectedDate}}</text>
+  </view>
+
+  <!-- 显示用户选择的票务和数量 -->
+  <view class="selected-items">
+    <view wx:for="{{selectedItems}}" wx:key="key" class="item-card">
+      <image class="item-image" src="{{item.imageUrl}}" />
+      <view class="item-info">
+        <text class="item-name">{{item.name}}</text>
+        <text class="item-price">￥{{item.price}} x {{item.count}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系人信息 -->
+  <view class="contact-info">
+    <view class="input-group">
+      <label for="name" class="input-label">姓名：</label>
+      <input id="name" type="text" placeholder="请输入姓名" bindinput="bindNameInput" class="input-field" />
+    </view>
+    <view class="input-group">
+      <label for="phone" class="input-label">手机号：</label>
+      <input id="phone" type="text" placeholder="请输入手机号" bindinput="bindPhoneInput" class="input-field" />
+    </view>
+  </view>
+
+  <!-- 协议勾选 -->
+  <view class="agreement-section">
+    <checkbox-group bindchange="toggleAgreement">
+      <checkbox value="agree" checked="{{isAgree}}" class="checkbox" /> 
+      <text class="agreement-text">同意《用户服务协议》及《隐私政策》</text>
+    </checkbox-group>
+  </view>
+
+  <!-- 总金额和提交订单 -->
+  <view class="total-section">
+    <view class="total-text">
+      <text>购买数量：{{totalQuantity}}张\n</text>
+      <text>合计：￥{{totalAmount}}</text>
+    </view>
+    <button class="submit-button" bindtap="submitOrder">提交订单</button>
+  </view>
+
+  <view class="order-list">
+    <block wx:for="{{orders}}" wx:key="id">
+      <view class="order-item">
+        <text>订单ID: {{item.id}}</text>
+        <text>商品名称: {{item.itemName}}</text>
+        <text>数量: {{item.quantity}}</text>
+        <text>总金额: ￥{{item.totalAmount}}</text>
+        <text>状态: {{item.status}}</text>
+        <text>创建时间: {{item.createdAt}}</text>
+      </view>
+    </block>
+  </view>
+</view>

@@ -1,0 +1,170 @@
+.performancebooking-container {
+  padding: 30rpx;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+.performancebooking-title {
+  font-size: 40rpx;
+  color: #333;
+  text-align: center;
+  margin: 20rpx 0 40rpx 0;
+  font-weight: bold;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  padding-bottom: 16rpx;
+}
+
+.performancebooking-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 80rpx;
+  height: 6rpx;
+  background: linear-gradient(90deg, #ff9800, #ff5722);
+  border-radius: 3rpx;
+  transform: translateX(-50%);
+}
+
+.performancebooking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.performancebooking-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.performancebooking-info {
+  flex: 1;
+}
+
+.performancebooking-name {
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 16rpx;
+  font-weight: 500;
+}
+
+.performancebooking-time,
+.performancebooking-duration,
+.performancebooking-location {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  display: flex;
+  align-items: center;
+}
+
+.performancebooking-time::before,
+.performancebooking-duration::before,
+.performancebooking-location::before {
+  content: '';
+  display: inline-block;
+  width: 6rpx;
+  height: 6rpx;
+  background-color: #999;
+  border-radius: 50%;
+  margin-right: 8rpx;
+}
+
+.performancebooking-status {
+  font-size: 26rpx;
+  color: #ff9800;
+  margin: 16rpx 0;
+  padding: 4rpx 12rpx;
+  background-color: rgba(255, 152, 0, 0.1);
+  border-radius: 8rpx;
+  display: inline-block;
+}
+
+.performancebooking-button {
+  margin-top: 16rpx;
+  padding: 16rpx 0;
+  background-color: #f44336;
+  color: white;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  text-align: center;
+  width: 100%;
+}
+
+.no-booking {
+  text-align: center;
+  padding: 60rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 悬浮窗样式 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 85%;
+  background: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f8f8;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 40rpx;
+  color: #999;
+  padding: 10rpx;
+}
+
+.modal-body {
+  padding: 30rpx;
+}
+
+.modal-item {
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.modal-label {
+  font-size: 28rpx;
+  color: #666;
+  width: 160rpx;
+}
+
+.modal-value {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+} 

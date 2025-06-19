@@ -1,0 +1,45 @@
+<view class="container">
+  <view class="header">
+    <text class="title">野生动物乐园意见反馈</text>
+  </view>
+  <view class="subtitle">
+    <text>感谢您对我们的信任与关注，请根据下方提示填写您的反馈信息！</text>
+  </view>
+  <view class="form">
+    <view class="form-item">
+      <text class="label">您的名字 <text class="required">*</text></text>
+      <input placeholder="请输入您的名字" bindinput="inputName" value="{{name}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label">联系方式 <text class="required">*</text></text>
+      <input placeholder="请输入您的联系方式" bindinput="inputContact" value="{{contact}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label">服务评分 <text class="required">*</text></text>
+      <view class="rating">
+        <view 
+          class="star {{index < rating ? 'active' : ''}}" 
+          wx:for="{{[1,2,3,4,5]}}" 
+          wx:key="*this"
+          bindtap="setRating"
+          data-rating="{{item}}"
+        >★</view>
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="label">反馈内容 <text class="required">*</text></text>
+      <textarea 
+        placeholder="请输入要反馈的信息..." 
+        bindinput="inputFeedback" 
+        value="{{feedbackText}}"
+      ></textarea>
+    </view>
+  </view>
+  <view class="buttons">
+    <button class="submit-button" bindtap="submitFeedback">确认提交</button>
+    <button class="reset-button" bindtap="resetForm">重置</button>
+  </view>
+</view>

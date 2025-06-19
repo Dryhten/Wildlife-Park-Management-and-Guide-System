@@ -1,0 +1,128 @@
+<view class="container">
+  <!-- 顶部选项卡 -->
+  <view class="tab-bar">
+    <view class="tab-item" 
+          wx:for="{{ticketTab}}" 
+          wx:key="index" 
+          data-index="{{index}}" 
+          bindtap="switchTab"
+          style="{{index === currentTabIndex ? 'background-color: #4CAF50; color: white;' : 'background-color: white; color: #4CAF50;'}}">
+      {{item}}
+    </view>
+  </view>
+
+  <!-- 门票部分 -->
+  <view wx:if="{{currentTab === 'ticket'}}">
+    <!-- 日期选择 -->
+    <picker mode="date" 
+            value="{{selectedDate}}" 
+            start="{{startDate}}" 
+            end="{{endDate}}" 
+            bindchange="bindDateChange">
+      <view class="date-picker">购票日期：{{selectedDate}}</view>
+    </picker>
+
+    <!-- 票种列表 -->
+    <view class="ticket-list">
+      <view class="ticket-item" wx:for="{{ticketTypes}}" wx:key="key">
+        <image class="ticket-image" src="{{item.imageUrl}}"></image>
+        <view class="ticket-info">
+          <view class="ticket-name">{{item.name}}</view>
+          <view class="ticket-price">单价：￥{{item.price}}</view>
+          <view class="ticket-count">
+            <button class="count-button" bindtap="reduceCount" data-type="ticket" data-key="{{item.key}}">-</button>
+            {{item.count}}
+            <button class="count-button" bindtap="addCount" data-type="ticket" data-key="{{item.key}}">+</button>
+          </view>
+          <view class="ticket-description">{{item.description}}</view>
+          <button class="detail-button" bindtap="viewDetails" data-key="{{item.key}}">查看详情</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 年卡部分 -->
+  <view wx:else>
+    <view class="annual-card-list">
+      <view class="annual-card-item" wx:for="{{annualCardTypes}}" wx:key="key">
+        <image class="ticket-image" src="{{item.imageUrl}}"></image>
+        <view class="ticket-info">
+          <view class="ticket-name">{{item.name}}</view>
+          <view class="ticket-price">单价：￥{{item.price}}</view>
+          <view class="ticket-count">
+            <button class="count-button" bindtap="reduceCount" data-type="card" data-key="{{item.key}}">-</button>
+            {{item.count}}
+            <button class="count-button" bindtap="addCount" data-type="card" data-key="{{item.key}}">+</button>
+          </view>
+          <view class="ticket-description">{{item.description}}</view>
+          <button class="detail-button" bindtap="viewDetails" data-key="{{item.key}}">查看详情</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 合计金额和结算按钮 -->
+  <view class="total-bar" wx:if="{{total > 0}}">
+    <view class="total-text">合计：￥{{total}}</view>
+    <view class="button-group">
+      <button class="clear-button" bindtap="clearCart">清空</button>
+      <button class="settlement-button" bindtap="gotoSettlement">去结算</button>
+    </view>
+  </view>
+  <view>
+    <view class="bottom-text">到底了....</view>
+  </view>
+
+  <!-- 详情弹窗 -->
+  <view class="modal" wx:if="{{showDetailModal}}" catchtap="closeDetailModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <view class="modal-title">{{detailItem.name}}</view>
+        <!-- <button class="modal-close" bindtap="closeDetailModal">X</button> -->
+      </view>
+      <view class="modal-body">
+        <view class="ticket-detail">
+          <image class="ticket-image" src="{{detailItem.imageUrl}}"></image>
+          <view class="ticket-name">{{detailItem.name}}</view>
+          <view class="ticket-price">单价：￥{{detailItem.price}}</view>
+          <view class="ticket-description">{{detailItem.description}}</view>
+          <view class="ticket-count">
+            <button class="count-button" bindtap="reduceCount" data-type="ticket" data-key="{{detailItem.key}}">-</button>
+            {{detailItem.count}}
+            <button class="count-button" bindtap="addCount" data-type="ticket" data-key="{{detailItem.key}}">+</button>
+          </view>
+        </view>
+
+        <!-- 动态展示详细内容 -->
+        <view class="modal-section">
+          <view class="modal-section-title">预订须知</view>
+          <view class="modal-section-content">
+            <view wx:for="{{detailItem.details.bookingNotice}}" wx:key="index">{{item}}</view>
+          </view>
+        </view>
+        <view class="modal-section">
+          <view class="modal-section-title">使用须知</view>
+          <view class="modal-section-content">
+            <view wx:for="{{detailItem.details.usageNotice}}" wx:key="index">{{item}}</view>
+          </view>
+        </view>
+        <view class="modal-section">
+          <view class="modal-section-title">退票须知</view>
+          <view class="modal-section-content">
+            <view wx:for="{{detailItem.details.refundNotice}}" wx:key="index">{{item}}</view>
+          </view>
+        </view>
+        <view class="modal-section">
+          <view class="modal-section-title">发票开具</view>
+          <view class="modal-section-content">
+            <view wx:for="{{detailItem.details.invoiceNotice}}" wx:key="index">{{item}}</view>
+          </view>
+        </view>
+        <view class="modal-section">
+          <view class="modal-section-title">客服电话</view>
+          <view class="modal-section-content">{{detailItem.details.customerService}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

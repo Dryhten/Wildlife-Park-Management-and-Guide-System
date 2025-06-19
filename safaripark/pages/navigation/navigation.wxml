@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="header">
+    <text>园区导航</text>
+  </view>
+  <view class="content">
+    <map
+      id="map"
+      latitude="{{latitude}}"
+      longitude="{{longitude}}"
+      markers="{{markers}}"
+      style="width: 100%; height: 300px;">
+    </map>
+    <button bindtap="startNavigation">开始导航</button>
+  </view>
+</view>

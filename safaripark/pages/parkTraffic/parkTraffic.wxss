@@ -1,0 +1,109 @@
+.traffic-container {
+  padding: 30rpx;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+}
+
+.update-time {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+  display: block;
+}
+
+.traffic-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
+
+.traffic-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.park-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.status-indicator {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-weight: bold;
+}
+
+.status-free {
+  background-color: #d4f7e7;
+  color: #18a058;
+}
+
+.status-smooth {
+  background-color: #e3f4ff;
+  color: #2080f0;
+}
+
+.status-crowded {
+  background-color: #fff3e0;
+  color: #ff9800;
+}
+
+.status-busy {
+  background-color: #ffebeb;
+  color: #d03050;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.data-item {
+  text-align: center;
+}
+
+.label {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.value {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #07c160;
+  margin-right: 10rpx;
+}
+
+.value.warning {
+  color: #ff4d4f;
+}
+
+.unit {
+  font-size: 24rpx;
+  color: #999;
+} 

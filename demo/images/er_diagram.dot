@@ -1,0 +1,103 @@
+digraph ER {
+    // 图的全局设置
+    rankdir=TB;
+    splines=spline;
+    node [fontname="Microsoft YaHei"];
+    edge [fontname="Microsoft YaHei"];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+25,25";
+    
+    // 实体和属性的基本样式
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+
+    // 动物信息表及其属性
+    animals [label="动物信息表", pos="0,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    animal_id [label="动物ID", pos="0,2!"];
+    animal_name [label="动物名称", pos="1.5,1.5!"];
+    animal_ename [label="英文名称", pos="2,0!"];
+    animal_sname [label="拉丁学名", pos="1.5,-1.5!"];
+    animal_habitat [label="栖息地", pos="0,-2!"];
+    animal_behavior [label="习性", pos="-1.5,-1.5!"];
+    animal_status [label="保护状态", pos="-2,0!"];
+    animal_desc [label="动物介绍", pos="-1.5,1.5!"];
+    animal_created [label="创建时间", pos="0,1!"];
+
+    // 动物园表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+    zoos [label="动物园表", pos="8,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    zoo_id [label="动物园ID", pos="8,2!"];
+    zoo_name [label="名称", pos="9.5,1.5!"];
+    zoo_city [label="城市", pos="10,0!"];
+    zoo_address [label="地址", pos="9.5,-1.5!"];
+    zoo_hours [label="开放时间", pos="8,-2!"];
+    zoo_phone [label="联系电话", pos="6.5,-1.5!"];
+    zoo_desc [label="简介", pos="6,0!"];
+    zoo_created [label="创建时间", pos="6.5,1.5!"];
+
+    // 园区表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+    parks [label="园区表", pos="16,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    park_id [label="园区ID", pos="16,2!"];
+    park_zoo_id [label="动物园ID", pos="17.5,1.5!"];
+    park_name [label="名称", pos="18,0!"];
+    park_background [label="背景信息", pos="17.5,-1.5!"];
+    park_features [label="特色景点", pos="16,-2!"];
+    park_distribution [label="动物分布", pos="14.5,-1.5!"];
+    park_guide [label="语音导览", pos="14,0!"];
+    park_created [label="创建时间", pos="14.5,1.5!"];
+
+    // 用户表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=lightblue];
+    users [label="用户表", pos="24,0!"];
+    node [shape=ellipse, style="filled", fillcolor=white];
+    user_id [label="用户ID", pos="24,2!"];
+    user_name [label="用户名", pos="25.5,1.5!"];
+    user_real_name [label="真实姓名", pos="26,0!"];
+    user_phone [label="手机号", pos="25.5,-1.5!"];
+    user_openid [label="微信openid", pos="24,-2!"];
+    user_gender [label="性别", pos="22.5,-1.5!"];
+    user_preference [label="用户偏好", pos="22,0!"];
+    user_created [label="创建时间", pos="22.5,1.5!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=gray];
+    
+    // 动物信息表的属性连接
+    animals -> {animal_id animal_name animal_ename animal_sname animal_habitat 
+               animal_behavior animal_status animal_desc animal_created};
+               
+    // 动物园表的属性连接
+    zoos -> {zoo_id zoo_name zoo_city zoo_address zoo_hours 
+             zoo_phone zoo_desc zoo_created};
+             
+    // 园区表的属性连接
+    parks -> {park_id park_zoo_id park_name park_background park_features 
+              park_distribution park_guide park_created};
+              
+    // 用户表的属性连接
+    users -> {user_id user_name user_real_name user_phone user_openid 
+              user_gender user_preference user_created};
+
+    // 实体间的关系
+    edge [dir=both, arrowhead=crow, arrowtail=none, color=blue, constraint=false];
+    zoos -> parks [label="1:n"];
+    parks -> animals [label="1:n"];
+    users -> parks [label="m:n"];
+
+    // 图例
+    subgraph cluster_legend {
+        label="图例说明";
+        node [shape=box, style="rounded,filled", fillcolor=lightblue];
+        legend_entity [label="实体"];
+        node [shape=ellipse, style="filled", fillcolor=white];
+        legend_attribute [label="属性"];
+        edge [dir=both, arrowhead=crow, arrowtail=none, color=blue];
+        legend_relation [label="关系"];
+    }
+} 

@@ -1,0 +1,405 @@
+.map-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+map {
+  width: 100%;
+  height: 100%;
+}
+
+.region-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx;
+  border-radius: 20rpx 20rpx 0 0;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.info-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.close-btn {
+  font-size: 40rpx;
+  color: #999;
+  padding: 10rpx;
+}
+
+.info-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20rpx;
+}
+
+.info-section {
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.section-content {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.audio-guide-btn {
+  margin: 20rpx 0;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 28rpx;
+  padding: 16rpx 32rpx;
+  border-radius: 8rpx;
+}
+
+.audio-guide {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+}
+
+.location-tip {
+  position: absolute;
+  top: 20rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+/* 修改导航提示样式 */
+.navigation-tips {
+  position: absolute;
+  top: 100rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20rpx 40rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  z-index: 1000;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  width: 90%; /* 设置固定宽度 */
+  box-sizing: border-box;
+}
+
+.navigation-tips text {
+  flex: 1;
+  text-align: center;
+  white-space: normal; /* 允许自然换行 */
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.4;
+  min-width: 0; /* 确保flex布局下文本可以正确换行 */
+}
+
+.navigation-icon {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0; /* 防止图标被压缩 */
+}
+
+/* 修改清除路线按钮样式 */
+.clear-route {
+  position: absolute;
+  bottom: 40rpx;
+  right: 20rpx;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 16rpx 32rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+}
+
+.clear-route-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 12rpx;
+}
+
+/* 添加兴趣点信息浮窗样式 */
+.poi-info {
+  position: absolute;
+  bottom: -200rpx; /* 初始位置在屏幕外 */
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 30rpx;
+  border-radius: 20rpx 20rpx 0 0;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out; /* 添加过渡效果 */
+}
+
+.poi-info.show {
+  bottom: 0; /* 显示时的位置 */
+}
+
+.poi-info-content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.poi-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  width: 100%;
+}
+
+.poi-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 20rpx;
+}
+
+.poi-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+}
+
+.navigation-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #4CAF50;
+  color: white;
+  padding: 16rpx 40rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  border: none;
+  margin-top: 20rpx;
+}
+
+.navigation-btn::after {
+  border: none;
+}
+
+.nav-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 10rpx;
+}
+
+/* 修改列表按钮位置和样式 */
+.poi-list-btn {
+  position: absolute;
+  bottom: 200rpx;  /* 改为距离底部200rpx */
+  right: 20rpx;   /* 改为靠右对齐 */
+  background: white;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.list-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-bottom: 8rpx;
+}
+
+.poi-list-btn text {
+  color: #666666;
+}
+
+/* 添加智能播报开关按钮样式 */
+.broadcast-switch {
+  position: absolute;
+  top: 120rpx;  /* 调整位置，避免与消息栏重叠 */
+  right: 20rpx;
+  background: white;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.broadcast-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8rpx;
+}
+
+.broadcast-switch text {
+  color: #666666;
+}
+
+/* 顶部消息栏样式 */
+.message-bar {
+  position: fixed;
+  top: 20rpx;
+  left: 20rpx;
+  right: 20rpx;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.message-content {
+  display: flex;
+  align-items: center;
+  min-height: 48rpx;  /* 确保消息栏有固定的最小高度 */
+}
+
+.message-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.message-content text {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* 园区详情弹窗样式 */
+.park-detail {
+  position: fixed;
+  top: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 1002;
+  transition: all 0.3s ease-in-out;
+  border-radius: 20rpx 20rpx 0 0;
+}
+
+.park-detail.show {
+  top: 30%;
+}
+
+.park-detail-header {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.park-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.close-btn {
+  font-size: 40rpx;
+  color: #999;
+  padding: 10rpx;
+}
+
+.park-detail-content {
+  padding: 30rpx;
+  max-height: calc(70vh - 100rpx);
+}
+
+.detail-section {
+  margin-bottom: 20rpx;
+}
+
+.section-content {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 添加语音播报开关按钮样式 */
+.voice-switch {
+  position: absolute;
+  top: 180rpx;  /* 调整位置，避免与其他按钮重叠 */
+  right: 20rpx;
+  background: white;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.voice-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8rpx;
+}
+
+.voice-switch text {
+  color: #666666;
+}
+
+/* 刷新按钮样式 */
+.refresh-btn {
+  position: absolute;
+  top: 280rpx;  /* 调整位置到更下方 */
+  right: 20rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.refresh-icon {
+  width: 40rpx;
+  height: 40rpx;
+} 

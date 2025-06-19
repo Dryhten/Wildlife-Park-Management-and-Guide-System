@@ -1,0 +1,21 @@
+<view class="park-container">
+  <view class="park-list">
+    <view class="park-card" wx:for="{{parkList}}" wx:key="parkId">
+      <view class="park-info">
+        <view class="park-name">{{item.parkName}}</view>
+        <view class="park-stats">
+          <text>园内人数: {{item.currentPeople}}</text>
+          <text>排队人数: {{item.queuePeople}}</text>
+        </view>
+      </view>
+      <button 
+        class="{{item.isBooked ? 'cancel-btn' : 'book-btn'}}"
+        bindtap="handleBooking"
+        data-park-id="{{item.parkId}}"
+        data-is-booked="{{item.isBooked}}"
+      >
+        {{item.isBooked ? '取消预约' : '预约'}}
+      </button>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,100 @@
+<view class="page-container">
+  <view class="order-tabs">
+    <text class="tab {{currentStatus === 'all' ? 'active' : ''}}" 
+          data-status="all" 
+          bindtap="switchTab">全部订单</text>
+    <text class="tab {{currentStatus === '待支付' ? 'active' : ''}}" 
+          data-status="待支付" 
+          bindtap="switchTab">待支付</text>
+    <text class="tab {{currentStatus === '待出行' ? 'active' : ''}}" 
+          data-status="待出行" 
+          bindtap="switchTab">待出行</text>
+    <text class="tab {{currentStatus === '已完成' ? 'active' : ''}}" 
+          data-status="已完成" 
+          bindtap="switchTab">已完成</text>
+    <text class="tab {{currentStatus === '已失效' ? 'active' : ''}}" 
+          data-status="已失效" 
+          bindtap="switchTab">已失效</text>
+  </view>
+
+  <block wx:if="{{orders.length > 0}}">
+    <block wx:for="{{orders}}" wx:key="orderNumber" wx:for-item="orderGroup">
+      <view class="order-card">
+        <view class="order-header">
+          <text class="order-number">订单号：{{orderGroup.orderNumber}}</text>
+          <text class="order-status">{{orderGroup.status}}</text>
+        </view>
+        <view class="order-items">
+          <block wx:for="{{orderGroup.items}}" wx:key="id" wx:for-item="item">
+            <view class="order-item">
+              <view class="item-info">
+                <text class="item-name">{{item.itemName}}</text>
+                <text class="item-quantity">x{{item.quantity}}</text>
+              </view>
+              <view class="item-price">¥{{item.totalAmount}}</view>
+            </view>
+          </block>
+        </view>
+        <view class="order-footer">
+          <text class="contact-info">联系人：{{orderGroup.contactName}} {{orderGroup.contactPhone}}</text>
+          <text class="visit-date" wx:if="{{orderGroup.visitDate}}">出行日期：{{orderGroup.visitDate}}</text>
+          <view class="order-actions">
+            <button class="action-btn" 
+                    wx:if="{{orderGroup.status === '待支付'}}" 
+                    bindtap="payOrder" 
+                    data-order-number="{{orderGroup.orderNumber}}">立即支付</button>
+            <button class="action-btn" 
+                    wx:if="{{orderGroup.status === '待出行' || orderGroup.status === '已完成'}}" 
+                    bindtap="showTicket" 
+                    data-order="{{orderGroup}}">查看门票</button>
+            <button class="action-btn" 
+                    wx:if="{{orderGroup.status === '已失效'}}" 
+                    disabled>已失效</button>
+          </view>
+        </view>
+      </view>
+    </block>
+  </block>
+
+  <block wx:else>
+    <view class="no-orders">
+      <text>暂无订单</text>
+    </view>
+  </block>
+</view>
+
+<!-- 门票信息弹窗 -->
+<view class="ticket-modal" wx:if="{{showTicketModal}}">
+  <view class="ticket-content">
+    <view class="ticket-header">
+      <text class="ticket-title">门票信息</text>
+      <text class="close-btn" bindtap="hideTicket">×</text>
+    </view>
+    <view class="ticket-body">
+      <view class="qrcode-section">
+        <view class="qrcode-container">
+          <image class="qrcode-image" src="https://api.qrtool.cn/?text=wildanimal%20{{currentTicket.orderNumber}}&size=300&level=H&margin=20" mode="aspectFit"></image>
+        </view>
+        <!-- <text class="qrcode-text">wildanimal {{currentTicket.orderNumber}}</text> -->
+      </view>
+      <view class="ticket-info">
+        <text class="info-label">订单号：</text>
+        <text class="info-value">{{currentTicket.orderNumber}}</text>
+      </view>
+      <view class="ticket-info">
+        <text class="info-label">游玩日期：</text>
+        <text class="info-value">{{currentTicket.visitDate}}</text>
+      </view>
+      <view class="ticket-info">
+        <text class="info-label">游客信息：</text>
+        <text class="info-value">{{currentTicket.contactName}} {{currentTicket.contactPhone}}</text>
+      </view>
+      <view class="ticket-items">
+        <view class="ticket-item" wx:for="{{currentTicket.items}}" wx:key="id">
+          <text class="item-name">{{item.itemName}}</text>
+          <text class="item-quantity">x{{item.quantity}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 

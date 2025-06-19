@@ -1,0 +1,74 @@
+digraph ER {
+    // 图的全局设置
+    splines=spline;
+    node [fontname="Microsoft YaHei", fontsize=14];
+    edge [fontname="Microsoft YaHei", fontsize=14];
+    
+    // 设置布局
+    layout=neato;
+    overlap=false;
+    sep="+5,5";  // 减小间距
+    
+    // 用户表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    users [label="用户表", pos="0,1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    user_id [label=<<u>用户ID</u>>, pos="0,1.4!"];
+    user_name [label="用户名", pos="0.6,1.3!"];
+    user_real_name [label="真实姓名", pos="0.8,1!"];
+    user_phone [label="手机号", pos="0.6,0.7!"];
+    user_openid [label="微信openid", pos="0,0.6!"];
+    user_gender [label="性别", pos="-0.6,0.7!"];
+    user_created [label="创建时间", pos="-0.6,1.3!"];
+
+    // 用户偏好表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    preferences [label="用户偏好表", pos="-1.5,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    pref_id [label=<<u>偏好ID</u>>, pos="-1.5,-0.6!"];
+    pref_user_id [label="用户ID", pos="-0.9,-0.7!"];
+    pref_switch [label="个性化开关", pos="-0.7,-1!"];
+    pref_transport [label="出行方式", pos="-0.9,-1.3!"];
+    pref_animals [label="喜爱动物", pos="-1.5,-1.4!"];
+    pref_created [label="创建时间", pos="-2.1,-1.3!"];
+    pref_updated [label="更新时间", pos="-2.1,-1!"];
+
+    // 反馈表及其属性
+    node [shape=box, style="rounded,filled", fillcolor=white, fontsize=16];
+    feedbacks [label="反馈表", pos="1.5,-1!"];
+    node [shape=ellipse, style="filled", fillcolor=white, fontsize=14];
+    feedback_id [label=<<u>反馈ID</u>>, pos="1.5,-0.6!"];
+    feedback_user_id [label="用户ID", pos="2.1,-0.7!"];
+    feedback_name [label="反馈人", pos="2.3,-1!"];
+    feedback_contact [label="联系方式", pos="2.1,-1.3!"];
+    feedback_content [label="反馈内容", pos="1.5,-1.4!"];
+    feedback_rating [label="评分", pos="0.9,-1.3!"];
+    feedback_created [label="创建时间", pos="0.9,-1!"];
+
+    // 关系节点
+    node [shape=diamond, style="filled", fillcolor=white, fontsize=14];
+    user_pref_rel [label="设置", pos="-0.8,0!"];
+    user_feedback_rel [label="提交", pos="0.8,0!"];
+
+    // 连接实体和属性
+    edge [dir=none, color=black, fontsize=14];
+    
+    // 用户表的属性连接
+    users -> {user_id user_name user_real_name user_phone user_openid 
+              user_gender user_created};
+             
+    // 用户偏好表的属性连接
+    preferences -> {pref_id pref_user_id pref_switch pref_transport 
+                   pref_animals pref_created pref_updated};
+               
+    // 反馈表的属性连接
+    feedbacks -> {feedback_id feedback_user_id feedback_name feedback_contact 
+                  feedback_content feedback_rating feedback_created};
+
+    // 实体间的关系（通过关系节点）
+    edge [dir=none, color=black, constraint=false, fontsize=14];
+    users -> user_pref_rel [label="1"];
+    user_pref_rel -> preferences [label="1"];
+    users -> user_feedback_rel [label="1"];
+    user_feedback_rel -> feedbacks [label="N"];
+} 

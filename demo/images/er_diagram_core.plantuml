@@ -1,0 +1,80 @@
+@startuml 动物园管理系统核心E-R图
+
+' 设置样式
+skinparam defaultFontSize 14
+skinparam defaultFontName "Microsoft YaHei"
+skinparam classFontSize 14
+skinparam classFontName "Microsoft YaHei"
+skinparam classAttributeFontSize 12
+skinparam classAttributeFontName "Microsoft YaHei"
+skinparam backgroundColor white
+skinparam linetype spline
+skinparam nodesep 80
+skinparam ranksep 100
+skinparam padding 5
+skinparam roundCorner 5
+
+!define Table(name,desc) class name as "desc" << (T,#FFAAAA) >>
+!define primary_key(x) <b>x</b>
+!define foreign_key(x) <u>x</u>
+!define column(x) <i>x</i>
+
+' 核心实体定义
+Table(zoos, "zoos\n(动物园表)") {
+  primary_key(id) INT
+  column(name) VARCHAR
+  column(city) VARCHAR
+  column(address) VARCHAR
+  column(opening_hours) VARCHAR
+  column(contact_phone) VARCHAR
+  column(description) TEXT
+}
+
+Table(parks, "parks\n(园区表)") {
+  primary_key(id) INT
+  foreign_key(zoo_id) INT
+  column(name) VARCHAR
+  column(background) TEXT
+  column(features) TEXT
+  column(animal_distribution) JSON
+  column(audio_guide) TEXT
+}
+
+Table(users, "users\n(用户表)") {
+  primary_key(id) INT
+  column(name) VARCHAR
+  column(real_name) VARCHAR
+  column(phone) VARCHAR
+  column(openid) VARCHAR
+  column(session_key) VARCHAR
+  column(preference) JSON
+  column(gender) VARCHAR
+  column(id_number) VARCHAR
+  foreign_key(current_zoo_id) INT
+}
+
+Table(park_poi, "park_poi\n(点位信息表)") {
+  primary_key(id) VARCHAR
+  foreign_key(zoo_id) INT
+  column(name) VARCHAR
+  column(latitude) DECIMAL
+  column(longitude) DECIMAL
+  column(category) VARCHAR
+  column(address) VARCHAR
+}
+
+Table(park_geometries, "park_geometries\n(园区地理范围表)") {
+  primary_key(id) INT
+  foreign_key(park_id) INT
+  column(geometry) TEXT
+}
+
+' 关系定义
+zoos "1" -- "*" parks : 包含 >
+zoos "1" -- "*" park_poi : 包含 >
+zoos "1" -- "*" users : 被访问 >
+parks "1" -- "1..* " park_geometries : 定义边界 >
+
+note "图例:\n实体: 浅红色矩形\n主键: <b>粗体</b>\n外键: <u>下划线</u>\n普通字段: <i>斜体</i>" as Legend
+
+@enduml 

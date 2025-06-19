@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "scan-button": "/components/scan-button/scan-button"
+  }
+}
