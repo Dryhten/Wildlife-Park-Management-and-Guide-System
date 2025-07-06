@@ -170,7 +170,7 @@ python app.py
 # 数据库配置
 DB_HOST=localhost
 DB_PORT=3306
-DB_NAME=safari_park
+DB_NAME=test
 DB_USER=root
 DB_PASSWORD=your_password
 
@@ -191,5 +191,5 @@ WECHAT_SECRET=your_secret
 本项目采用 MIT 许可证。
 
 ## 联系方式
-
+dryhtenofficial@163.com
 如有问题或建议，请联系开发团队。 

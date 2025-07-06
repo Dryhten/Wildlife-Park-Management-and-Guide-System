@@ -1,3 +1,16 @@
+-- 动物信息表
+CREATE TABLE animals (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 动物ID
+    name VARCHAR(255) NOT NULL,        -- 动物名称
+		english_name VARCHAR(255) NOT NULL,-- 动物英文名称
+    scientific_name VARCHAR(255),      -- 动物拉丁学名
+    habitat VARCHAR(255),              -- 栖息地
+    behavior TEXT,                     -- 习性
+    conservation_status ENUM('Extinct', 'Endangered', 'Vulnerable', 'Least Concern') NOT NULL, -- 保护状态
+    description TEXT,                  -- 动物介绍
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 创建时间
+) COMMENT='动物信息表';
+
 -- 动物园表
 CREATE TABLE zoos (
     id INT AUTO_INCREMENT PRIMARY KEY,    -- 动物园ID
@@ -11,10 +24,18 @@ CREATE TABLE zoos (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) COMMENT='动物园表';
 
+-- 插入动物园数据
+INSERT INTO zoos (id, name, city, address, opening_hours, contact_phone, description) VALUES
+('1', '杭州野生动物世界', '杭州', '浙江省杭州市富阳区九龙大道一号', '9:30 - 16:30', NULL, '杭州野生动物世界是华东地区规模最大的野生动物园，集动物展示、科普教育、休闲娱乐为一体。'),
+('002', '上海野生动物园', '上海', '上海市浦东新区南六公路178号', '9:00 - 17:00', NULL, '上海野生动物园是中国首座国家级野生动物园，拥有来自世界各地的珍稀动物。'),
+('003', '北京野生动物园', '北京', '北京市大兴区榆垡镇万亩森林', '8:30 - 17:30', NULL, '北京野生动物园是华北地区最大的野生动物园，以自然生态展示为特色。'),
+('004', '广州长隆野生动物世界', '广州', '广东省广州市番禺区汉溪大道东299号', '9:30 - 18:00', NULL, '广州长隆野生动物世界是亚洲最大的野生动物主题公园，拥有众多珍稀动物。'),
+('005', '深圳野生动物园', '深圳', '广东省深圳市南山区西丽湖路4065号', '9:30 - 18:00', NULL, '深圳野生动物园是中国第一家放养式野生动物园，以自然生态展示为特色。');
+
 -- 园区信息表
 CREATE TABLE parks (
     id INT AUTO_INCREMENT PRIMARY KEY, -- 园区ID
-    zoo_id INT NOT NULL,              -- 所属动物园ID
+    zoo_id INT NOT NULL DEFAULT 1,              -- 所属动物园ID
     name VARCHAR(255) NOT NULL,        -- 园区名称
     background TEXT,                   -- 背景信息
     features TEXT,                     -- 特色景点
@@ -22,12 +43,107 @@ CREATE TABLE parks (
     audio_guide TEXT,                  -- 语音播报介绍
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 创建时间
     FOREIGN KEY (zoo_id) REFERENCES zoos(id) ON DELETE CASCADE -- 外键约束
-) COMMENT='园区信息表';
+) COMMENT='园区信息表'; 
+
+-- 游客信息表
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,   -- 用户ID
+    name VARCHAR(255),                   -- 用户名
+    real_name VARCHAR(255),              -- 真实姓名
+    phone VARCHAR(20),                   -- 手机号
+    openid VARCHAR(255) UNIQUE,          -- 微信小程序内的唯一标识
+    session_key VARCHAR(255),            -- 微信session密钥
+    gender VARCHAR(10) DEFAULT "男",     -- 性别
+    id_number VARCHAR(20),               -- 身份证号
+    preference JSON,                     -- 用户偏好（JSON格式）
+    current_zoo_id int DEFAULT 1, -- 当前查看的动物园ID，默认为1
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 创建时间
+    FOREIGN KEY (current_zoo_id) REFERENCES zoos(id) ON DELETE SET NULL -- 外键约束
+) COMMENT='游客信息表';
+
+-- 用户偏好表
+CREATE TABLE user_preferences (
+    id INT AUTO_INCREMENT PRIMARY KEY,    -- ID
+    user_id INT NOT NULL,                 -- 用户ID
+    is_personalized BOOLEAN DEFAULT false, -- 是否开启个性化
+    transport_mode VARCHAR(10),            -- 交通方式(步行/自驾)
+    favorite_animals JSON,                -- 喜欢的动物(JSON数组)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) COMMENT='用户偏好表';
+
+-- 安全预警表
+CREATE TABLE safety_alerts (
+    id INT AUTO_INCREMENT PRIMARY KEY,   -- 预警ID
+    user_id INT NOT NULL,                -- 用户ID
+    zone_id INT NOT NULL,                -- 区域ID
+    alert_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 预警时间
+    status ENUM('Active', 'Resolved') DEFAULT 'Active', -- 预警状态
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
+    updated_by VARCHAR(255), -- 更新者
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, -- 外键约束
+    FOREIGN KEY (zone_id) REFERENCES danger_zones(id) ON DELETE CASCADE -- 外键约束
+) COMMENT='安全预警表';
+
+-- 园区预订表
+CREATE TABLE bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 预约ID
+    user_id INT NOT NULL,              -- 用户ID
+    park_id INT NOT NULL,              -- 所属园区ID
+    booking_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 预约时间
+    status ENUM('Pending', 'Playing','Completed', 'Cancelled') DEFAULT 'Pending', -- 预约状态
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, -- 外键约束
+    FOREIGN KEY (park_id) REFERENCES parks(id) ON DELETE CASCADE -- 外键约束
+) COMMENT='园区预订表';
+
+-- 订单信息表
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_number VARCHAR(32) NOT NULL COMMENT '订单号，用于关联同一笔订单中的多个票种',
+    user_id INT NOT NULL COMMENT '用户ID',
+    item_name VARCHAR(255) NOT NULL COMMENT '票务或年卡名称',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10, 2) NOT NULL COMMENT '总金额',
+    contact_name VARCHAR(50) NOT NULL COMMENT '联系人姓名',
+    contact_phone VARCHAR(20) NOT NULL COMMENT '联系人电话',
+    visit_date DATE COMMENT '观园日期（门票必填，年卡可为空）',
+    status ENUM('待支付', '待出行', '已完成', '已失效') DEFAULT '待支付' COMMENT '订单状态',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    INDEX idx_order_number (order_number) COMMENT '订单号索引',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单信息表';
+
+-- 创建订单状态自动更新触发器
+DELIMITER //
+CREATE TRIGGER update_order_status
+BEFORE UPDATE ON orders
+FOR EACH ROW
+BEGIN
+    -- 如果观园日期已过且状态为待出行，则自动更新为已失效
+    IF OLD.status = '待出行' AND NEW.status = '待出行' 
+       AND OLD.visit_date < CURDATE() THEN
+        SET NEW.status = '已失效';
+    END IF;
+END;//
+DELIMITER ;
+
+-- 创建定时检查触发器（每天执行一次）
+CREATE EVENT check_orders_status
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_DATE + INTERVAL 1 DAY
+DO
+BEGIN
+    UPDATE orders 
+    SET status = '已失效'
+    WHERE status = '待出行' 
+    AND visit_date < CURDATE();
+END;
 
 -- 动物表演表
 CREATE TABLE performances (
     id INT AUTO_INCREMENT PRIMARY KEY,           -- 表演ID
-    zoo_id INT NOT NULL,                         -- 所属动物园ID
     title VARCHAR(255) NOT NULL,                 -- 表演名称（如：小火车课堂、鸟类展示）
     duration VARCHAR(50) NOT NULL,               -- 演出时长（如：30分钟）
     location VARCHAR(255) NOT NULL,              -- 演出地点（如：乘车游览区）
@@ -42,37 +158,84 @@ CREATE TABLE performances (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     updated_by VARCHAR(255),
-    FOREIGN KEY (park_id) REFERENCES parks(id) ON DELETE CASCADE,
-    FOREIGN KEY (zoo_id) REFERENCES zoos(id) ON DELETE CASCADE
+    FOREIGN KEY (park_id) REFERENCES parks(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='动物表演表';
 
--- 园区流量表
-CREATE TABLE park_traffic (
-    id INT AUTO_INCREMENT PRIMARY KEY, -- 流量统计ID
-    zoo_id INT NOT NULL,              -- 所属动物园ID
-    park_id INT NOT NULL,              -- 园区ID
-    current_people INT NOT NULL,       -- 当前园区内人数
-    queue_people INT NOT NULL,         -- 当前排队人数
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (park_id) REFERENCES parks(id) ON DELETE CASCADE, -- 外键约束
-    FOREIGN KEY (zoo_id) REFERENCES zoos(id) ON DELETE CASCADE -- 外键约束
-) COMMENT='园区流量表';
+-- 动物表演预约表
+CREATE TABLE performance_bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,                    -- 预订ID
+    user_id INT NOT NULL,                                 -- 用户ID
+    performance_id INT NOT NULL,                          -- 表演ID
+    status ENUM('已预约', '已完成', '已取消') DEFAULT '已预约', -- 预约状态
+    booking_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,     -- 预约提交时间
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (performance_id) REFERENCES performances(id) ON DELETE CASCADE,
+    INDEX idx_user_bookings (user_id, performance_id)    -- 添加用户预约查询索引
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='动物表演预约表';
+
+-- 创建表演预约状态自动更新触发器
+DELIMITER //
+CREATE TRIGGER update_performance_booking_status
+BEFORE UPDATE ON performance_bookings
+FOR EACH ROW
+BEGIN
+    -- 获取关联的表演信息的日期时间，并判断是否已过期
+    DECLARE performance_datetime DATETIME;
+    
+    SELECT TIMESTAMP(p.show_date, p.show_time) INTO performance_datetime
+    FROM performances p
+    WHERE p.id = NEW.performance_id;
+    
+    -- 如果演出时间已过且状态为已预约，则自动更新为已完成
+    IF OLD.status = '已预约' AND NEW.status = '已预约' 
+       AND performance_datetime < NOW() THEN
+        SET NEW.status = '已完成';
+    END IF;
+END;//
+DELIMITER ;
+
+-- 创建定时检查触发器（每天执行一次）
+CREATE EVENT check_performance_bookings_status
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_DATE + INTERVAL 1 DAY
+DO
+BEGIN
+    -- 更新所有已过期的预约状态
+    UPDATE performance_bookings pb
+    JOIN performances p ON pb.performance_id = p.id
+    SET pb.status = '已完成'
+    WHERE pb.status = '已预约' 
+    AND TIMESTAMP(p.show_date, p.show_time) < NOW();
+END;
+
+-- 游客反馈表
+CREATE TABLE feedbacks (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 反馈ID
+    user_id INT NOT NULL,              -- 用户ID
+		name VARCHAR(255) NOT NULL,				 -- 反馈者姓名
+		contact VARCHAR(20), 							 -- 反馈者电话号码
+    content TEXT,                      -- 反馈内容
+    rating INT,                        -- 评分（1-5）
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 更新时间
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 创建时间
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE -- 外键约束
+) COMMENT='游客反馈表';
+
 
 -- 园区地理范围表
 CREATE TABLE park_geometries (
     id INT AUTO_INCREMENT PRIMARY KEY, -- 园区地理范围ID
-    zoo_id INT NOT NULL,              -- 所属动物园ID
     park_id INT NOT NULL,              -- 园区ID（外键）
     geometry TEXT,                     -- 园区地理范围（多边形）
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 创建时间
-    FOREIGN KEY (park_id) REFERENCES parks(id) ON DELETE CASCADE, -- 外键约束
-    FOREIGN KEY (zoo_id) REFERENCES zoos(id) ON DELETE CASCADE -- 外键约束
+    FOREIGN KEY (park_id) REFERENCES parks(id) ON DELETE CASCADE -- 外键约束
 ) COMMENT='园区地理范围表';
 
 -- 危险区域表
 CREATE TABLE danger_zones (
     id INT AUTO_INCREMENT PRIMARY KEY,    -- 危险区域ID
-    zoo_id INT NOT NULL,                  -- 所属动物园ID
     name VARCHAR(100) NOT NULL,           -- 危险区域名称
     description TEXT,                     -- 危险区域描述
     geometry TEXT NOT NULL,               -- 危险区域地理范围（多边形坐标）
@@ -81,9 +244,73 @@ CREATE TABLE danger_zones (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    -- 创建时间
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
     created_by VARCHAR(50),              -- 创建人
-    updated_by VARCHAR(50),              -- 更新人
-    FOREIGN KEY (zoo_id) REFERENCES zoos(id) ON DELETE CASCADE -- 外键约束
-) COMMENT='危险区域表';
+    updated_by VARCHAR(50)              -- 更新人
+) COMMENT='危险区域表'; 
+
+INSERT INTO danger_zones (name, description, geometry, risk_level, created_by) 
+VALUES (
+    '车行区的禁止通行区域',
+    '车行区野生动物生态栖息地',
+    '30.155638,119.984007;30.156279,119.988137;30.153987,119.987590;30.153755,119.984629',
+    2,
+    'admin'
+);
+
+-- 园区流量表
+CREATE TABLE park_traffic (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- 流量统计ID
+    park_id INT NOT NULL,              -- 园区ID
+    current_people INT NOT NULL,       -- 当前园区内人数
+    queue_people INT NOT NULL,         -- 当前排队人数
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
+    FOREIGN KEY (park_id) REFERENCES parks(id) ON DELETE CASCADE -- 外键约束
+) COMMENT='园区流量表';
+
+DELIMITER /
+CREATE TRIGGER update_queue_people_on_status_change
+AFTER UPDATE ON bookings
+FOR EACH ROW
+BEGIN
+    -- 当预约状态从 Pending 变为 Playing 时
+    IF (OLD.status = 'Pending' AND NEW.status = 'Playing') THEN
+        UPDATE park_traffic
+        SET queue_people = queue_people - 1,
+            current_people = current_people + 1,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE park_id = OLD.park_id;
+    END IF;
+
+    -- 当预约状态从 Pending 变为 Cancelled 时
+    IF (OLD.status = 'Pending' AND NEW.status = 'Cancelled') THEN
+        UPDATE park_traffic
+        SET queue_people = queue_people - 1,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE park_id = OLD.park_id;
+    END IF;
+
+    -- 当预约状态从 Playing 变为 Completed 时
+    IF (OLD.status = 'Playing' AND NEW.status = 'Completed') THEN
+        UPDATE park_traffic
+        SET current_people = current_people - 1,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE park_id = OLD.park_id;
+    END IF;
+END;
+/
+-- 创建触发器：在插入新预约记录后增加 queue_people
+CREATE TRIGGER update_queue_people_after_insert
+AFTER INSERT ON bookings
+FOR EACH ROW
+BEGIN
+    IF NEW.status = 'Pending' THEN
+        UPDATE park_traffic
+        SET queue_people = queue_people + 1,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE park_id = NEW.park_id;
+    END IF;
+END;
+/
+DELIMITER ;
 
 -- 点位信息表
 CREATE TABLE park_poi (
@@ -96,3 +323,363 @@ CREATE TABLE park_poi (
     address VARCHAR(255),
     FOREIGN KEY (zoo_id) REFERENCES zoos(id) ON DELETE CASCADE -- 外键约束
 ) COMMENT='点位信息表'; 
+
+-- 插入POI数据
+INSERT INTO park_poi (id, zoo_id, name, latitude, longitude, category, address) VALUES
+('2199029409345', '1', '杭州野生动物世界[公交站]', 30.146288, 119.985179, '基础设施:交通设施:公交车站', NULL),
+('2431526715756341245', '1', '狼', 30.154554, 119.989111, '旅游景点:动物园', NULL),
+('8379047739571082497', '1', '自驾车游园入口', 30.146537, 119.986116, '室内及附属设施:通行设施类:门/出入口', NULL),
+('10607483467903068336', '1', '白鹇', 30.150318, 119.987822, '旅游景点:动物园', NULL),
+('1296920649713670357', '1', '白犀牛', 30.152162, 119.984598, '旅游景点:动物园', NULL),
+('16779769286502131545', '1', '美洲豹', 30.149164, 119.983672, '旅游景点:动物园', NULL),
+('13579604535135486182', '1', '懒猴', 30.148629, 119.986078, '旅游景点:动物园', NULL),
+('1328445980381980438', '1', '绿鬣蜥', 30.148474, 119.985976, '旅游景点:动物园', NULL),
+('2796371192742313219', '1', '售卖点', 30.151646, 119.98558, '购物:其它购物', NULL),
+('2713933490540328042', '1', '检票处-入口', 30.146949, 119.985683, '室内及附属设施:通行设施类:门/出入口', NULL),
+('13569468555064784375', '1', '猞猁', 30.149376, 119.983997, '旅游景点:动物园', NULL),
+('8946425274934462096', '1', '浣熊', 30.149085, 119.986872, '旅游景点:动物园', NULL),
+('14843826584819658023', '1', '斑鬣狗', 30.148925, 119.985043, '旅游景点:动物园', NULL),
+('13381935564288207207', '1', '白狮', 30.149218, 119.985023, '旅游景点:动物园', NULL),
+('10429747520907215507', '1', '羊驼', 30.150538, 119.986852, '旅游景点:动物园', NULL),
+('12271270768338942057', '1', '赤狐', 30.149402, 119.984486, '旅游景点:动物园', NULL),
+('5490365841074112438', '1', '马来貘', 30.151212, 119.982562, '旅游景点:动物园', NULL),
+('2920876451448871436', '1', '勇闯蚁巢', 30.152409, 119.983787, '旅游景点:动物园', NULL),
+('13134042280139360329', '1', '金虎', 30.149417, 119.985151, '旅游景点:动物园', NULL),
+('9744849075492263221', '1', '海龟', 30.149487, 119.98764, '旅游景点:动物园', NULL),
+('11678465956722282620', '1', '丹顶鹤', 30.148068, 119.984026, '旅游景点:动物园', NULL),
+('16710579042249603622', '1', '金雕', 30.150125, 119.987775, '旅游景点:动物园', NULL),
+('14552970388744733680', '1', '孔雀', 30.148547, 119.983689, '旅游景点:动物园', NULL),
+('1095751286584878494', '1', '欢乐庄园', 30.151908, 119.983888, '娱乐休闲:其它娱乐休闲', NULL),
+('15925459463659430978', '1', '猎豹', 30.14881, 119.984761, '旅游景点:动物园', NULL),
+('9737656103782404146', '1', '萨氏巨蜥', 30.148894, 119.986401, '旅游景点:动物园', NULL),
+('9757173597834326815', '1', '医务室', 30.147211, 119.98561, '医疗保健:诊所', NULL),
+('9096772280894827845', '1', '黑背胡狼', 30.149362, 119.984276, '旅游景点:动物园', NULL),
+('6412145304177708485', '1', '休闲广场', 30.148735, 119.984266, '旅游景点:城市广场', NULL),
+('7441193945660077059', '1', '金毛羚羊', 30.15128, 119.980971, '旅游景点:动物园', NULL),
+('10660218501645130423', '1', '南美貘', 30.148259, 119.985149, '旅游景点:动物园', NULL),
+('820195997176333593', '1', '森林剧场', 30.150074, 119.986776, '娱乐休闲:剧场音乐厅:剧场', NULL),
+('17809210107684090807', '1', '旋转热浪', 30.152083, 119.982843, '娱乐休闲:户外活动:游乐场', NULL),
+('8618423098072678167', '1', '秃鹳', 30.15163, 119.983412, '旅游景点:动物园', NULL),
+('16948351523385099193', '1', '避役', 30.148502, 119.985943, '旅游景点:动物园', NULL),
+('4114469663251500703', '1', '长颈鹿', 30.153015, 119.983393, '旅游景点:动物园', NULL),
+('9323897934690955302', '1', '东方白鹳', 30.149421, 119.987136, '旅游景点:动物园', NULL),
+('4087727137765170006', '1', '原野战车', 30.152122, 119.983646, '娱乐休闲:户外活动:游乐场', NULL),
+('11668087690007515576', '1', '金毛羚牛', 30.151451, 119.980923, '旅游景点:动物园', NULL),
+('8650672962283658813', '1', '爬行长廊', 30.148582, 119.985826, '旅游景点:动物园', NULL),
+('3855772774952433106', '1', 'P1自驾游停车场-出入口', 30.146515, 119.986117, '室内及附属设施:通行设施类:停车场出入口', NULL),
+('14814869521853693346', '1', '非洲原野', 30.153589, 119.982691, '旅游景点:动物园', NULL),
+('9875734834820752024', '1', '熊猫殿', 30.152235, 119.981146, '旅游景点:动物园', NULL),
+('7535540533220056432', '1', '豪华转马', 30.152273, 119.982925, '娱乐休闲:户外活动:游乐场', NULL),
+('12066803525464448245', '1', '自控飞机', 30.152338, 119.982631, '娱乐休闲:户外活动:游乐场', NULL),
+('14512920029849361384', '1', '泰鳄', 30.148971, 119.986671, '旅游景点:动物园', NULL),
+('11006256680153589119', '1', '森林火车站', 30.151799, 119.985751, '旅游景点:动物园', NULL),
+('1271145173746114024', '1', '北极狼', 30.149562, 119.98396, '旅游景点:动物园', NULL),
+('6120561324606478601', '1', '乘车游览区', 30.151825, 119.985945, '旅游景点:动物园', NULL),
+('16370206236154241135', '1', '火烈鸟', 30.15402, 119.984048, '旅游景点:动物园', NULL),
+('14266882640641894061', '1', '鳄龟', 30.148958, 119.986614, '旅游景点:动物园', NULL),
+('8356111758804254335', '1', '马来熊', 30.148606, 119.983803, '旅游景点:动物园', NULL),
+('17947113086009106658', '1', '森林驿站', 30.152071, 119.98351, '旅游景点:动物园', NULL),
+('6482756645386983396', '1', '非洲狮', 30.157442, 119.987505, '旅游景点:动物园', NULL),
+('8737626906891889843', '1', '鹦鹉广场', 30.148069, 119.985959, '旅游景点:动物园', NULL),
+('15353680526917155634', '1', '小食蚁兽', 30.149575, 119.987377, '旅游景点:动物园', NULL),
+('12565802130541295992', '1', '红腹锦鸡', 30.150087, 119.987825, '旅游景点:动物园', NULL),
+('5467058716697133310', '1', '大食蚁兽', 30.149794, 119.987377, '旅游景点:动物园', NULL),
+('5251074289836855445', '1', '转转小熊', 30.151901, 119.983039, '购物:其它购物', NULL),
+('10327160788981817357', '1', '华南虎', 30.149664, 119.98471, '旅游景点:动物园', NULL),
+('12507443155844544637', '1', '雪虎', 30.149763, 119.984961, '旅游景点:动物园', NULL),
+('10497898941422274934', '1', '白腹锦鸡', 30.149807, 119.987764, '旅游景点:动物园', NULL),
+('9772126274687081914', '1', '银黑狐', 30.149604, 119.984547, '旅游景点:动物园', NULL),
+('14168872235753591316', '1', '狐猴岛', 30.150818, 119.982041, '旅游景点:动物园', NULL),
+('686080202594857153', '1', '热水供应点', 30.151392, 119.984901, '生活服务', NULL),
+('5782174229160574368', '1', '森巴精灵部落', 30.149718, 119.987845, '旅游景点:动物园', NULL),
+('18407874821166199525', '1', '二趾树懒', 30.151745, 119.98442, '旅游景点:动物园', NULL),
+('10899868753491964322', '1', '金钱豹', 30.149298, 119.984355, '旅游景点:动物园', NULL),
+('4667890179291610421', '1', '非洲部落', 30.151981, 119.982407, '旅游景点:动物园', NULL),
+('14160155092677308744', '1', '湖畔咖啡', 30.151403, 119.985948, '娱乐休闲:咖啡厅', NULL),
+('2980801449477968408', '1', '中华鸟园', 30.151151, 119.980803, '旅游景点:动物园', NULL),
+('5606289541898634190', '1', '黑颈天鹅', 30.150969, 119.985847, '旅游景点:动物园', NULL),
+('12597056621039609757', '1', '黑喉巨蜥', 30.148986, 119.986396, '旅游景点:动物园', NULL),
+('16487567710644197951', '1', '掠食险境', 30.149127, 119.984372, '旅游景点:动物园', NULL),
+('1758358783272869070', '1', 'A区停车场-出入口', 30.150697, 119.987853, '室内及附属设施:通行设施类:停车场出入口', NULL),
+('12408721679650247780', '1', '红绿金刚鹦鹉', 30.1497, 119.987808, '旅游景点:动物园', NULL),
+('17865409818514688755', '1', '吉祥馄饨', 30.152017, 119.983944, '美食:小吃快餐', NULL),
+('5757830320771828169', '1', '梅花鹿', 30.156753, 119.982914, '旅游景点:动物园', NULL),
+('4657515149391609738', '1', '蓝宝石广场', 30.150139, 119.986504, '旅游景点:城市广场', NULL),
+('4334788875351330738', '1', '双角犀鸟', 30.149703, 119.987938, '旅游景点:动物园', NULL),
+('12162020570438386219', '1', '红腹角雉', 30.150084, 119.987858, '旅游景点:动物园', NULL),
+('10558990704856705400', '1', '非洲顽猴', 30.149677, 119.982461, '旅游景点:动物园', NULL),
+('17233543227931789160', '1', '亚洲巨龟', 30.148433, 119.985883, '旅游景点:动物园', NULL),
+('4600458712175066769', '1', '赫尔曼陆龟', 30.148949, 119.986577, '旅游景点:动物园', NULL),
+('8075026558754795623', '1', '兰芳园丝袜奶茶', 30.151883, 119.984187, '美食:中餐厅:其它中餐厅', NULL),
+('2734964408286877803', '1', '蓝黄金刚鹦鹉', 30.149617, 119.987763, '旅游景点:动物园', NULL),
+('7223166301592611213', '1', '美洲狮', 30.149104, 119.98359, '旅游景点:动物园', NULL),
+('915142873884310703', '1', '金虎', 30.149658, 119.98474, '旅游景点:动物园', NULL),
+('15760518021019128813', '1', '白狮', 30.149139, 119.984988, '旅游景点:动物园', NULL),
+('15986740773639208344', '1', '北极狐', 30.149456, 119.983586, '旅游景点:动物园', NULL),
+('2198343221840510289', '1', '斑鬣狗', 30.148926, 119.985043, '旅游景点:动物园', NULL),
+('16752171304970975944', '1', '三色犬', 30.149168, 119.984863, '旅游景点:动物园', NULL),
+('3369322301674491144', '1', '华南虎', 30.149525, 119.984966, '旅游景点:动物园', NULL),
+('10438410744677453343', '1', '赤狐', 30.149392, 119.984543, '旅游景点:动物园', NULL),
+('6068853167212924055', '1', '咬不得高祖生煎', 30.151744, 119.985275, '美食:小吃快餐', NULL),
+('2861085271047575449', '1', '狮吼苍穹', 30.156372, 119.985444, '旅游景点:动物园', NULL),
+('5357785642925180865', '1', '水豚', 30.151725, 119.984279, '旅游景点:动物园', NULL),
+('12855531197772772362', '1', '雨林美食广场', 30.151461, 119.986611, '美食:小吃快餐', NULL),
+('3337877484695627428', '1', '竹林食坊', 30.151367, 119.982207, '美食:中餐厅:其它中餐厅', NULL),
+('6699670377734925431', '1', '马戏表演场', 30.150182, 119.98677, '娱乐休闲:剧场音乐厅:剧场', NULL),
+('9889500050560860989', '1', '灰大袋鼠', 30.152856, 119.988845, '旅游景点:动物园', NULL),
+('4578632235021203183', '1', '黑白疣猴', 30.149712, 119.982742, '旅游景点:动物园', NULL),
+('16914624091965519869', '1', '麋鹿', 30.155995, 119.983067, '旅游景点:动物园', NULL),
+('14333959462484067280', '1', '格林兰雨林', 30.151683, 119.986101, '旅游景点:动物园', NULL),
+('646224682805507465', '1', '长颈鹿', 30.152971, 119.982881, '旅游景点:动物园', NULL),
+('7865931173497695903', '1', '白颊长臂猿', 30.151651, 119.981259, '旅游景点:动物园', NULL),
+('13834831432667139871', '1', '食蟹猴', 30.151343, 119.983178, '旅游景点:动物园', NULL),
+('8165566645016004047', '1', '黑尾土拨鼠', 30.151568, 119.986243, '旅游景点:动物园', NULL),
+('15870331740806149616', '1', '马上奥斯丁', 30.15195, 119.986673, '旅游景点:动物园', NULL),
+('7718366811499010254', '1', '红毛猩猩', 30.151743, 119.980686, '旅游景点:动物园', NULL),
+('16888690765974054516', '1', '熊猫研学讲堂', 30.152217, 119.980975, '教育学校:其它教育学校', NULL),
+('10961683334291574108', '1', '黄金蟒', 30.151816, 119.986227, '旅游景点:动物园', NULL),
+('11113888294178060453', '1', '山魈', 30.149063, 119.982564, '旅游景点:动物园', NULL),
+('983329534132300208', '1', '黑帽悬猴', 30.148881, 119.983078, '旅游景点:动物园', NULL),
+('933526316954507242', '1', '狂野佩可斯', 30.151913, 119.986623, '旅游景点:动物园', NULL),
+('7773304597684232535', '1', '白鼻长尾猴', 30.14928, 119.98296, '旅游景点:动物园', NULL),
+('6802888212850950118', '1', '鸳鸯', 30.152646, 119.982771, '旅游景点:动物园', NULL),
+('10293975936277715777', '1', '羊驼互动体验区', 30.150577, 119.986739, '旅游景点:动物园', NULL),
+('13659767261646839589', '1', '秃鹳', 30.152759, 119.982364, '旅游景点:动物园', NULL),
+('14109590154210646303', '1', '白虎课堂', 30.149741, 119.985186, '教育学校:培训', NULL),
+('4195624013766379356', '1', '鹦鹉互动展区', 30.151671, 119.986202, '旅游景点:动物园', NULL),
+('6843212431094742087', '1', '松鹤延年', 30.148401, 119.985047, '旅游景点:动物园', NULL),
+('7278492855995132375', '1', '水羚', 30.154486, 119.983017, '旅游景点:动物园', NULL),
+('7787908689595338807', '1', '金丝猴', 30.151399, 119.981139, '娱乐休闲:其它娱乐休闲', NULL),
+('10591083364116953688', '1', '鸵鸟', 30.155825, 119.981224, '旅游景点:动物园', NULL),
+('15866236576624234851', '1', '梦幻加勒比', 30.151897, 119.986913, '旅游景点:动物园', NULL),
+('17044139730040538285', '1', '鸸鹋', 30.152858, 119.98962, '旅游景点:动物园', NULL),
+('171535982213171504', '1', '阿拉伯狒狒', 30.150073, 119.982543, '旅游景点:动物园', NULL),
+('12514034897368998641', '1', '亲子乐园', 30.152202, 119.982515, '娱乐休闲:亲子', NULL),
+('12968985891823098955', '1', '小火车售票处', 30.151838, 119.983393, '生活服务', NULL),
+('17890440848844811011', '1', '绿猴', 30.149712, 119.982209, '旅游景点:动物园', NULL),
+('12622447342546765002', '1', '大羚羊', 30.157248, 119.986551, '旅游景点:动物园', NULL),
+('6697237206420111237', '1', '野驴', 30.157077, 119.985519, '旅游景点:动物园', NULL),
+('16145676646264683894', '1', '白骆驼', 30.156239, 119.983949, '旅游景点:动物园', NULL),
+('15254212035710329130', '1', '蓝角马', 30.154935, 119.981073, '旅游景点:动物园', NULL),
+('89841054624314692', '1', '驼羊', 30.154195, 119.988283, '旅游景点:动物园', NULL),
+('1853716512028419560', '1', '狞猫·豹猫', 30.148933, 119.984504, '旅游景点:动物园', NULL);
+
+INSERT INTO parks (name, background, features, animal_distribution, audio_guide) VALUES
+('掠食险境', '汇聚了来自亚、美、非三大洲近30种猛兽。', 
+'特色景点包括开阔的活动场地和隐蔽的休息区，游客可以远距离观察猛兽的自然行为。', 
+'{"regions": ["开阔活动场地", "隐蔽休息区"], "animals": ["狮子", "老虎", "熊", "美洲豹", "猎豹", "豹子", "犀牛"]}',
+'欢迎来到掠食险境！这里是大型猛兽的家园，您可以看到狮子、老虎、熊等动物。狮子是草原之王，以其威武的鬃毛和强大的力量著称。老虎是森林中的顶级捕食者，拥有美丽的条纹和敏捷的身手。熊类动物包括棕熊和黑熊，它们以杂食性为主，冬季会进入冬眠状态。美洲豹以其强大的力量和敏捷的身手闻名，是美洲的顶级捕食者。猎豹是陆地上速度最快的动物，善于短距离冲刺。豹子以其优雅的姿态和强大的捕猎能力著称。犀牛以其巨大的体型和独特的角而闻名，是草原上的重要动物。请注意安全，保持安静，不要投喂动物。在这里，您可以远距离观察这些猛兽的自然行为，感受它们的野性和魅力。'),
+
+('非洲顽猴', '这是一个展示灵长类动物的区域，包括狒狒、长尾猴等。', 
+'特色景点包括多个活动区和休息区，游客可以近距离观察灵长类动物。', 
+'{"regions": ["活动区", "休息区"], "animals": ["狒狒", "长尾猴", "红毛猩猩", "金丝猴"]}',
+'欢迎来到非洲顽猴区！这里是灵长类动物的家园，您可以看到狒狒、长尾猴等动物。狒狒以其强壮的体格和群居的生活方式著称，是非洲草原上的重要动物。长尾猴以其灵活的身手和聪明的头脑闻名，是森林中的精灵。红毛猩猩以其与人类相似的行为和智力而闻名，是濒危的珍稀动物。金丝猴以其美丽的金色毛发和活泼的性格著称。请保持安静，不要投喂动物，享受与这些灵长类动物的亲密接触。'),
+
+('中华国宝区', '这是一个展示大熊猫和其他珍稀动物的区域。', 
+'特色景点包括多个熊猫馆和竹林，游客可以近距离观察大熊猫。', 
+'{"regions": ["熊猫馆", "竹林"], "animals": ["大熊猫", "小熊猫", "金丝猴"]}',
+'欢迎来到中华国宝区！这里是大熊猫和其他珍稀动物的家园。大熊猫以其憨态可掬的外形和温顺的性格闻名，是中国的国宝。小熊猫以其可爱的外形和灵活的身手著称，是森林中的精灵。金丝猴以其美丽的金色毛发和活泼的性格闻名。请保持安静，不要投喂动物，享受与这些珍稀动物的亲密接触。'),
+
+('非洲部落', '这是一个展示草食性动物的区域，包括鹿、羚羊、长颈鹿等。', 
+'特色景点包括广阔的草原和树林，游客可以看到草食动物自由活动。', 
+'{"regions": ["广阔草原", "树林区域"], "animals": ["鹿", "羚羊", "长颈鹿", "公牛", "骆驼", "河马", "马", "山羊", "大象", "斑马"]}',
+'欢迎来到非洲部落！这里是草食性动物的乐园，您可以看到鹿、羚羊、长颈鹿等动物。鹿类动物以其优雅的姿态和温顺的性格著称，它们在草原上自由奔跑，寻找新鲜的草料。羚羊以其敏捷的身手和快速的奔跑能力闻名，是草原上的精灵。长颈鹿是世界上最高的动物，以其长颈和独特的斑纹为特征，它们在树林中觅食高处的树叶。公牛是家牛的一种，具有较强的领地意识，常用于农业耕作。骆驼以其耐旱能力和在沙漠中的运输能力而闻名。河马以其巨大的体型和在水中的生活习性而著称。马以其优雅的姿态和在农业及运动中的重要性而闻名。山羊以其善于攀爬的能力和在农业中的价值而被广泛饲养。大象以其巨大的体型和长鼻子而闻名，是草原上的重要动物。斑马以其独特的黑白条纹而著称，是草原上的重要草食动物。请保持安静，不要投喂动物，享受与这些温顺动物的亲密接触。'),
+
+('动物幼儿园', '这是一个展示幼年动物的区域，包括幼年狮子、幼年长颈鹿等。', 
+'特色景点包括多个幼年动物活动区和观察区，游客可以近距离观察幼年动物。', 
+'{"regions": ["幼年动物活动区", "观察区"], "animals": ["狮子", "长颈鹿", "大象"]}',
+'欢迎来到动物幼儿园！这里是幼年动物的家园，您可以看到幼年狮子、幼年长颈鹿等动物。幼年狮子以其活泼好动的性格和可爱的样子著称，正在学习捕猎技能。幼年长颈鹿以其独特的外形和好奇心闻名，正在探索周围的环境。幼年大象以其巨大的体型和温顺的性格著称，正在学习如何使用长鼻子。请保持安静，不要投喂动物，享受与这些幼年动物的亲密接触。'),
+
+('鹦鹉广场', '这是一个展示各种鹦鹉的区域', 
+'特色景点包括多个观鸟亭和湿地，游客可以近距离观察鹦鹉。', 
+'{"regions": ["观鸟亭"], "animals": ["鹦鹉"]}',
+'欢迎来到鹦鹉广场！这里是各种鹦鹉的栖息地。鹦鹉以其鲜艳的羽毛和模仿人类语言的能力著称，是鸟类中的明星。'),
+
+('爬行动物长廊', '这是一个展示爬行动物的区域，包括蛇、蜥蜴、乌龟等。', 
+'特色景点包括多个展示区和互动体验区，游客可以观察爬行动物。', 
+'{"regions": ["展示区", "互动体验区"], "animals": ["蛇", "蜥蜴", "乌龟", "鳄鱼", "蝎子"]}',
+'欢迎来到爬行动物长廊！这里是蛇、蜥蜴、乌龟等爬行动物的家园。蛇类动物以其灵活的身姿和多样的种类著称，有些蛇类还具有毒性，是生态系统中的重要捕食者。蜥蜴以其多样的形态和栖息方式闻名，从树栖到地栖，展示了爬行动物的多样性。乌龟以其缓慢的行动和长寿著称，是爬行动物中的长寿代表。鳄鱼以其强大的力量和伏击能力而闻名，是水生环境中的顶级捕食者。蝎子以其毒刺和夜行性而著称。请注意安全，不要触摸动物，享受与这些独特爬行动物的亲密接触。'),
+
+('森巴精灵部落', '这是一个展示各种鸟类的区域，包括孔雀、老鹰等。', 
+'特色景点包括多个观鸟亭和湿地，游客可以近距离观察鸟类。', 
+'{"regions": ["湿地"], "animals": ["孔雀", "老鹰", "金丝雀", "喜鹊", "猫头鹰", "乌鸦", "麻雀"]}',
+'欢迎来到森巴精灵部落！这里是各种鸟类的栖息地，您可以看到孔雀、老鹰等动物。孔雀以其华丽的尾羽和优雅的姿态闻名，开屏时的美丽景象令人难忘。老鹰是天空中的霸主，以其锐利的视力和强大的飞行能力著称。金丝雀以其悦耳的鸣叫声和鲜艳的羽毛而闻名。喜鹊以其聪明的头脑和善于鸣叫而著称。猫头鹰以其夜行性和锐利的视力而闻名。乌鸦以其聪明的头脑和广泛分布而著称。麻雀以其常见的身影和活泼的习性而闻名。请注意不要惊扰鸟类，保持安静，享受与这些美丽鸟类的亲密接触。'),
+
+('森林剧场', '这是一个展示动物表演的区域，包括各种精彩的动物秀。', 
+'特色景点包括主舞台和观众席，游客可以观看各种动物表演。', 
+'{"regions": ["主舞台", "观众席"], "animals": ["猴子", "鹦鹉", "海狮", "狗", "马"]}',
+'欢迎来到森林剧场！这里是动物表演的中心，您可以看到猴子、鹦鹉、海狮等动物的精彩表演。猴子以其灵活的身手和聪明的头脑著称，它们将为您带来杂技表演和搞笑互动。鹦鹉以其悦耳的鸣叫声和模仿能力闻名，它们将展示语言天赋和才艺表演。海狮以其敏捷的身手和友好的性格著称，它们将为您带来水上表演和顶球绝技。狗以其忠诚的性格和多样的才艺闻名，它们将展示搜救技能和舞蹈表演。马以其优雅的姿态和强大的力量著称，它们将为您带来骑术表演和马术秀。请保持安静，不要投喂动物，享受这些精彩绝伦的动物表演。'),
+
+('车行区', '这是一个供游客驾车观光的区域，设有专门的车道。', 
+'特色景点包括专门的车道和多个观景点，游客可以驾车游览整个园区。', 
+'{"regions": ["车道", "观景点"], "animals": []}',
+'欢迎来到车行区！这里设有专门的车道和多个观景点，您可以驾车游览整个园区，欣赏沿途的美景。车道贯穿园区的主要区域，您可以驾车经过猛兽区、草食动物区、鸟类区等，近距离观察各种动物的自然行为。观景点设有专门的停车区域和观景平台，您可以停车休息，拍照留念，感受园区的自然美景。请注意行车安全，遵守园区的交通规定，确保您和家人的安全。');
+
+INSERT INTO park_geometries (park_id, geometry) VALUES
+-- 掠食险境
+(1, 'POLYGON((119.983417 30.149970, 119.985434 30.150077, 119.985455 30.148778, 119.983406 30.148745, 119.983417 30.149970))'),
+
+-- 非洲顽猴
+(2, 'POLYGON((119.981942 30.150902, 119.982172 30.150930, 119.982623 30.150156, 119.983138 30.149233, 119.983229 30.148759, 119.983186 30.148662, 119.982301 30.148987, 119.981818 30.150606, 119.981942 30.150902))'),
+
+-- 中华国宝区
+(3, 'POLYGON((119.981448 30.153092, 119.981668 30.152044, 119.981115 30.150953, 119.980434 30.150972, 119.980584 30.152229, 119.980874 30.152851, 119.981448 30.153092))'),
+
+-- 非洲部落
+(4, 'POLYGON((119.981346 30.154326, 119.981620 30.154613, 119.982162 30.153681, 119.982945 30.153764, 119.983513 30.153120, 119.982934 30.152461, 119.982328 30.152577, 119.982167 30.152266, 119.982580 30.151937, 119.982365 30.151617, 119.981636 30.151788, 119.981335 30.153973, 119.981346 30.154326))'),
+
+-- 动物幼儿园
+(5, 'POLYGON((119.982462 30.152466, 119.983583 30.152327, 119.983964 30.152220, 119.983733 30.151691, 119.982832 30.151682, 119.982419 30.152122, 119.982306 30.152354, 119.982462 30.152466))'),
+
+-- 鹦鹉广场
+(6, 'POLYGON((119.985793 30.148161, 119.986056 30.148101, 119.986008 30.147901, 119.985756 30.147910, 119.985793 30.148161))'),
+
+-- 爬行动物长廊
+(7, 'POLYGON((119.985713 30.148657, 119.986534 30.149112, 119.986786 30.148917, 119.986244 30.148249, 119.985579 30.148500, 119.985713 30.148657))'),
+
+-- 森巴精灵部落
+(8, 'POLYGON((119.987671 30.150374, 119.987912 30.150383, 119.987998 30.149284, 119.987660 30.149297, 119.987671 30.150374))'),
+
+-- 森林剧场
+(9, 'POLYGON((119.985965 30.150536, 119.986657 30.150564, 119.986839 30.150337, 119.986534 30.149808, 119.986051 30.149863, 119.985943 30.150272, 119.985965 30.150536))'),
+
+-- 车行区
+(10, 'POLYGON((119.981132 30.156316, 119.988341 30.158254, 119.990423 30.157614, 119.990594 30.155573, 119.989114 30.153931, 119.989961 30.153366, 119.987869 30.152011, 119.987204 30.151909, 119.983588 30.152735, 119.983299 30.153625, 119.982827 30.153774, 119.982076 30.153653, 119.981518 30.154729, 119.981829 30.156872, 119.981132 30.156316))');
+
+INSERT INTO performances (title, duration, location, description, image_url, park_id, show_time, show_date, status, max_capacity, current_bookings) VALUES
+('动物小课堂', '30分钟', '乘车游览区', '在这片原野上...', 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGFuaW1hbHxlbnwwfHwwfHx8MA%3D%3D', 1, '10:00:00', '2025-12-01', 1, 100, 0),
+('鸟类天堂', '45分钟', '鸟类区', '精彩的鸟类表演...', 'https://images.unsplash.com/photo-1555169062-013468b47731?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YW5pbWFsfGVufDB8fDB8fHww', 1, '12:00:00', '2025-12-01', 1, 150, 0),
+('大象表演', '40分钟', '大象区', '大象的精彩表演...', 'https://plus.unsplash.com/premium_photo-1664298849700-abbfe6f854d5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8JUU1JUE0JUE3JUU4JUIxJUExfGVufDB8fDB8fHww', 1, '14:00:00', '2025-12-01', 1, 200, 0),
+('狮子喂食', '20分钟', '狮子区', '狮子的喂食时间...', 'https://img0.baidu.com/it/u=3663637814,2291648536&fm=253&fmt=auto&app=138&f=JPEG?w=190&h=190', 1, '16:00:00', '2025-12-01', 1, 80, 0),
+('海豚表演', '50分钟', '海洋馆', '海豚的精彩表演...', 'https://img1.baidu.com/it/u=2155878241,684812124&fm=253&fmt=auto&app=138&f=JPEG?w=200&h=200', 1, '11:00:00', '2025-12-01', 1, 120, 0),
+('企鹅喂食', '15分钟', '企鹅馆', '企鹅的喂食时间...', 'https://img1.baidu.com/it/u=1969450994,3699530130&fm=253&fmt=auto&app=120&f=JPEG?w=171&h=171', 1, '13:00:00', '2025-12-01', 1, 60, 0),
+('猴子表演', '35分钟', '猴子区', '猴子的精彩表演...', 'https://img0.baidu.com/it/u=2232774836,1867232730&fm=253&fmt=auto&app=138&f=JPEG?w=200&h=200', 1, '15:00:00', '2025-12-01', 1, 90, 0),
+('蛇类展示', '25分钟', '爬虫馆', '蛇类的精彩展示...', 'https://img2.baidu.com/it/u=388496273,2791500873&fm=253&fmt=auto?w=220&h=165', 1, '17:00:00', '2025-12-01', 1, 70, 0),
+('长颈鹿喂食', '20分钟', '长颈鹿区', '长颈鹿的喂食时间...', 'https://img1.baidu.com/it/u=234082949,3488528847&fm=253&fmt=auto?w=182&h=193', 1, '09:00:00', '2025-12-01', 1, 50, 0),
+('熊猫表演', '30分钟', '熊猫馆', '熊猫的精彩表演...', 'https://img2.baidu.com/it/u=1346918263,4060532845&fm=253&fmt=auto&app=138&f=JPEG?w=171&h=128', 1, '18:00:00', '2025-12-01', 1, 110, 0);
+
+INSERT INTO park_traffic (park_id, current_people, queue_people)
+SELECT id, 0, 0 FROM parks;
+
+CREATE TABLE `administrator` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT 'ID',
+    `username` VARCHAR(255) NOT NULL COMMENT '用户名',
+    `password` VARCHAR(255) NOT NULL COMMENT '密码',
+    `nickname` VARCHAR(255) COMMENT '昵称',
+    `role` VARCHAR(10) NOT NULL DEFAULT '0' COMMENT '权限（0:园区管理员, 1:系统管理员）'
+) COMMENT='园区管理员表';
+
+-- 创建默认管理员账户（系统管理员）
+INSERT INTO `administrator` (`username`, `password`, `nickname`, `role`) 
+VALUES ('admin', 'admin123', '系统管理员', '1');
+
+-- 创建默认园区管理员账户
+INSERT INTO `administrator` (`username`, `password`, `nickname`, `role`)
+VALUES ('park', 'park123', '园区管理员', '0');
+
+DELIMITER //
+
+-- 创建触发器：在插入新预约记录后更新 queue_people
+CREATE TRIGGER update_queue_people_after_insert
+AFTER INSERT ON bookings
+FOR EACH ROW
+BEGIN
+    UPDATE park_traffic
+    SET queue_people = queue_people + 1
+    WHERE park_id = NEW.park_id;
+END;
+
+// 创建触发器：在删除预约记录后更新 queue_people
+CREATE TRIGGER update_queue_people_after_delete
+AFTER DELETE ON bookings
+FOR EACH ROW
+BEGIN
+    UPDATE park_traffic
+    SET queue_people = queue_people - 1
+    WHERE park_id = OLD.park_id;
+END;
+
+DELIMITER ;
+
+-- 插入动物数据
+INSERT INTO animals (name, english_name, scientific_name, habitat, behavior, conservation_status, description) VALUES
+('熊', 'Bear', 'Ursidae', '森林、山地', '杂食性，冬眠，善于攀爬和游泳。', 'Least Concern', '熊是一种大型哺乳动物，广泛分布于北半球的森林和山地。它们以杂食性为主，冬季会进入冬眠状态。熊类动物包括棕熊、黑熊和北极熊等。'),
+('棕熊', 'Brown bear', 'Ursus arctos', '森林、山地', '杂食性，冬眠，体型较大，力量强大。', 'Least Concern', '棕熊是熊科中的一种，主要分布在欧亚大陆和北美洲的森林和山地。它们以杂食性为主，冬季会进入冬眠状态。棕熊体型较大，力量强大，是森林中的顶级捕食者。'),
+('公牛', 'Bull', 'Bos taurus', '草原、牧场', '草食性，群居，具有领地意识。', 'Least Concern', '公牛是家牛的一种，主要分布在世界各地的草原和牧场。它们以草食性为主，群居生活，具有较强的领地意识。公牛在农业中被广泛用于耕作和提供肉类。'),
+('蝴蝶', 'Butterfly', 'Lepidoptera', '花园、森林', '植食性，生命周期包括卵、幼虫、蛹和成虫。', 'Least Concern', '蝴蝶是昆虫纲鳞翅目的一种，广泛分布于世界各地的花园和森林。它们以植食性为主，生命周期包括卵、幼虫（毛毛虫）、蛹和成虫四个阶段。蝴蝶以其美丽的翅膀和优雅的飞行姿态而闻名。'),
+('骆驼', 'Camel', 'Camelus', '沙漠、草原', '草食性，耐旱，能长时间不饮水。', 'Least Concern', '骆驼是哺乳动物，主要分布在非洲和亚洲的沙漠和草原。它们以草食性为主，具有极强的耐旱能力，能够在恶劣的环境中生存。骆驼在沙漠中被广泛用于运输和骑乘。'),
+('金丝雀', 'Canary', 'Serinus canaria', '森林、草原', '植食性，善于鸣叫，常被饲养为宠物。', 'Least Concern', '金丝雀是小型鸣禽，主要分布在欧洲和非洲的森林和草原。它们以植食性为主，善于鸣叫，声音悦耳动听，常被饲养为宠物。'),
+('毛毛虫', 'Caterpillar', 'Lepidoptera larvae', '森林、花园', '植食性，生命周期的幼虫阶段，会蜕皮成长。', 'Least Concern', '毛毛虫是蝴蝶和蛾的幼虫阶段，广泛分布于世界各地的森林和花园。它们以植食性为主，会不断蜕皮成长，最终变成蛹，最终羽化成成虫。'),
+('牛', 'Cattle', 'Bos taurus', '草原、牧场', '草食性，群居，提供牛奶和肉类。', 'Least Concern', '牛是家畜的一种，主要分布在世界各地的草原和牧场。它们以草食性为主，群居生活，提供牛奶、肉类和皮革等产品。牛在农业中具有重要的经济价值。'),
+('蜈蚣', 'Centipede', 'Chilopoda', '土壤、落叶层', '肉食性，夜行，具有毒爪。', 'Least Concern', '蜈蚣是多足纲动物，广泛分布于世界各地的土壤和落叶层。它们以肉食性为主，夜行性，具有毒爪，用于捕猎和防御。蜈蚣在生态系统中扮演着重要的角色。'),
+('猎豹', 'Cheetah', 'Acinonyx jubatus', '草原、沙漠', '肉食性，速度极快，善于短距离冲刺。', 'Vulnerable', '猎豹是猫科动物，主要分布在非洲的草原和沙漠。它们以肉食性为主，是陆地上速度最快的动物，善于短距离冲刺。猎豹在生态系统中是重要的捕食者。'),
+('鸡', 'Chicken', 'Gallus gallus domesticus', '农场、庭院', '杂食性，群居，提供鸡蛋和肉类。', 'Least Concern', '鸡是家禽的一种，广泛分布于世界各地的农场和庭院。它们以杂食性为主，群居生活，提供鸡蛋和肉类。鸡在农业中具有重要的经济价值。'),
+('螃蟹', 'Crab', 'Brachyura', '海洋、河口', '肉食性，生活在水中，具有坚硬的外壳。', 'Least Concern', '螃蟹是甲壳纲动物，广泛分布于海洋和河口。它们以肉食性为主，生活在水中，具有坚硬的外壳，用于保护身体。螃蟹在海洋生态系统中扮演着重要的角色。'),
+('鳄鱼', 'Crocodile', 'Crocodylidae', '河流、湖泊', '肉食性，伏击猎物，生活在水中。', 'Least Concern', '鳄鱼是爬行动物，主要分布在热带和亚热带的河流和湖泊。它们以肉食性为主，善于伏击猎物，生活在水中。鳄鱼在生态系统中是重要的捕食者。'),
+('鹿', 'Deer', 'Cervidae', '森林、草原', '草食性，群居，雄性有鹿角。', 'Least Concern', '鹿是哺乳动物，广泛分布于森林和草原。它们以草食性为主，群居生活，雄性有鹿角，用于争夺配偶和防御。鹿在生态系统中是重要的草食动物。'),
+('鸭', 'Duck', 'Anatidae', '湖泊、河流', '杂食性，群居，善于游泳。', 'Least Concern', '鸭是水禽的一种，广泛分布于湖泊和河流。它们以杂食性为主，群居生活，善于游泳。鸭在农业中被广泛饲养，提供肉类和蛋类。'),
+('老鹰', 'Eagle', 'Accipitridae', '山地、森林', '肉食性，飞行能力强，视力极佳。', 'Least Concern', '老鹰是猛禽的一种，广泛分布于山地和森林。它们以肉食性为主，飞行能力强，视力极佳，善于捕猎小型动物。老鹰在生态系统中是重要的捕食者。'),
+('大象', 'Elephant', 'Elephantidae', '草原、森林', '草食性，群居，智力高，寿命长。', 'Endangered', '大象是哺乳动物，主要分布在非洲和亚洲的草原和森林。它们以草食性为主，群居生活，智力高，寿命长。大象在生态系统中是重要的草食动物，但目前面临严重的生存威胁。'),
+('鱼', 'Fish', 'Pisces', '海洋、河流、湖泊', '肉食性或草食性，生活在水中，用鳃呼吸。', 'Least Concern', '鱼是水生动物，广泛分布于海洋、河流和湖泊。它们以肉食性或草食性为主，生活在水中，用鳃呼吸。鱼在生态系统中扮演着重要的角色。'),
+('狐狸', 'Fox', 'Canidae', '森林、草原', '肉食性，独居，善于捕猎小型动物。', 'Least Concern', '狐狸是哺乳动物，广泛分布于森林和草原。它们以肉食性为主，独居生活，善于捕猎小型动物。狐狸在生态系统中是重要的捕食者。'),
+('青蛙', 'Frog', 'Anura', '湿地、森林', '肉食性，幼体生活在水中，成体生活在陆地和水中。', 'Least Concern', '青蛙是两栖动物，广泛分布于湿地和森林。它们以肉食性为主，幼体生活在水中，成体生活在陆地和水中。青蛙在生态系统中是重要的捕食者。'),
+('长颈鹿', 'Giraffe', 'Giraffidae', '草原、森林', '草食性，群居，颈长，善于觅食高处的树叶。', 'Vulnerable', '长颈鹿是哺乳动物，主要分布在非洲的草原和森林。它们以草食性为主，群居生活，颈长，善于觅食高处的树叶。长颈鹿在生态系统中是重要的草食动物。'),
+('山羊', 'Goat', 'Capra aegagrus hircus', '山地、草原', '草食性，群居，善于攀爬。', 'Least Concern', '山羊是家畜的一种，广泛分布于山地和草原。它们以草食性为主，群居生活，善于攀爬。山羊在农业中具有重要的经济价值。'),
+('金鱼', 'Goldfish', 'Carassius auratus', '淡水', '草食性，常被饲养为观赏鱼。', 'Least Concern', '金鱼是淡水鱼类，广泛分布于淡水环境。它们以草食性为主，常被饲养为观赏鱼。金鱼在文化和观赏方面具有重要的价值。'),
+('鹅', 'Goose', 'Anatidae', '湖泊、河流', '杂食性，群居，善于游泳。', 'Least Concern', '鹅是水禽的一种，广泛分布于湖泊和河流。它们以杂食性为主，群居生活，善于游泳。鹅在农业中被广泛饲养，提供肉类和蛋类。'),
+('仓鼠', 'Hamster', 'Cricetidae', '草原、沙漠', '杂食性，夜行，常被饲养为宠物。', 'Least Concern', '仓鼠是小型哺乳动物，广泛分布于草原和沙漠。它们以杂食性为主，夜行性，常被饲养为宠物。仓鼠在宠物市场中非常受欢迎。'),
+('港口海豹', 'Harbor seal', 'Phoca vitulina', '海洋、海岸', '肉食性，生活在水中，善于游泳。', 'Least Concern', '港口海豹是海洋哺乳动物，广泛分布于海洋和海岸。它们以肉食性为主，生活在水中，善于游泳。港口海豹在海洋生态系统中扮演着重要的角色。'),
+('刺猬', 'Hedgehog', 'Erinaceidae', '森林、草原', '肉食性，夜行，背上长刺，善于捕食昆虫。', 'Least Concern', '刺猬是小型哺乳动物，广泛分布于森林和草原。它们以肉食性为主，夜行性，背上长刺，善于捕食昆虫。刺猬在生态系统中是重要的捕食者。'),
+('河马', 'Hippopotamus', 'Hippopotamidae', '河流、湖泊', '草食性，群居，生活在水中，体型庞大。', 'Vulnerable', '河马是哺乳动物，主要分布在非洲的河流和湖泊。它们以草食性为主，群居生活，生活在水中，体型庞大。河马在生态系统中是重要的草食动物。'),
+('马', 'Horse', 'Equus ferus caballus', '草原、牧场', '草食性，群居，用于运输和运动。', 'Least Concern', '马是哺乳动物，广泛分布于草原和牧场。它们以草食性为主，群居生活，用于运输和运动。马在农业和体育中具有重要的价值。'),
+('美洲豹', 'Jaguar', 'Panthera onca', '热带雨林、草原', '肉食性，独居，善于伏击猎物。', 'Least Concern', '美洲豹是猫科动物，主要分布在美洲的热带雨林和草原。它们以肉食性为主，独居生活，善于伏击猎物。美洲豹在生态系统中是重要的捕食者。'),
+('水母', 'Jellyfish', 'Scyphozoa', '海洋', '肉食性，生活在水中，具有触手和刺细胞。', 'Least Concern', '水母是海洋无脊椎动物，广泛分布于海洋。它们以肉食性为主，生活在水中，具有触手和刺细胞。水母在海洋生态系统中扮演着重要的角色。'),
+('袋鼠', 'Kangaroo', 'Macropodidae', '草原、沙漠', '草食性，群居，具有强壮的后腿，善于跳跃。', 'Least Concern', '袋鼠是哺乳动物，主要分布在澳大利亚的草原和沙漠。它们以草食性为主，群居生活，具有强壮的后腿，善于跳跃。袋鼠在生态系统中是重要的草食动物。'),
+('考拉', 'Koala', 'Phascolarctos cinereus', '桉树林', '草食性，树栖，以桉树叶为食。', 'Vulnerable', '考拉是哺乳动物，主要分布在澳大利亚的桉树林。它们以草食性为主，树栖生活，以桉树叶为食。考拉在生态系统中是重要的草食动物，但目前面临生存威胁。'),
+('瓢虫', 'Ladybug', 'Coccinellidae', '花园、森林', '肉食性，捕食蚜虫等害虫。', 'Least Concern', '瓢虫是小型昆虫，广泛分布于花园和森林。它们以肉食性为主，捕食蚜虫等害虫。瓢虫在农业中是重要的益虫。'),
+('豹子', 'Leopard', 'Panthera pardus', '森林、草原', '肉食性，独居，善于攀爬和伏击猎物。', 'Vulnerable', '豹子是猫科动物，广泛分布于森林和草原。它们以肉食性为主，独居生活，善于攀爬和伏击猎物。豹子在生态系统中是重要的捕食者。'),
+('狮子', 'Lion', 'Panthera leo', '草原、沙漠', '肉食性，群居，顶级捕食者。', 'Vulnerable', '狮子是猫科动物，主要分布在非洲的草原和沙漠。它们以肉食性为主，群居生活，是顶级捕食者。狮子在生态系统中具有重要的地位。'),
+('蜥蜴', 'Lizard', 'Squamata', '森林、沙漠', '肉食性或草食性，善于攀爬和捕猎。', 'Least Concern', '蜥蜴是爬行动物，广泛分布于森林和沙漠。它们以肉食性或草食性为主，善于攀爬和捕猎。蜥蜴在生态系统中是重要的捕食者。'),
+('猞猁', 'Lynx', 'Lynx', '森林、山地', '肉食性，独居，善于捕猎小型哺乳动物。', 'Least Concern', '猞猁是猫科动物，广泛分布于森林和山地。它们以肉食性为主，独居生活，善于捕猎小型哺乳动物。猞猁在生态系统中是重要的捕食者。'),
+('喜鹊', 'Magpie', 'Pica pica', '森林、草原', '杂食性，群居，善于鸣叫。', 'Least Concern', '喜鹊是鸟类，广泛分布于森林和草原。它们以杂食性为主，群居生活，善于鸣叫。喜鹊在文化和生态系统中具有重要的地位。'),
+('猴子', 'Monkey', 'Simiidae', '森林、草原', '杂食性，群居，智力高，善于攀爬。', 'Least Concern', '猴子是哺乳动物，广泛分布于森林和草原。它们以杂食性为主，群居生活，智力高，善于攀爬。猴子在生态系统中是重要的动物。'),
+('蛾和蝴蝶', 'Moths and butterflies', 'Lepidoptera', '森林、花园', '植食性，生命周期包括卵、幼虫、蛹和成虫。', 'Least Concern', '蛾和蝴蝶是昆虫，广泛分布于森林和花园。它们以植食性为主，生命周期包括卵、幼虫、蛹和成虫四个阶段。蛾和蝴蝶在生态系统中是重要的传粉者。'),
+('老鼠', 'Mouse', 'Muridae', '森林、草原', '杂食性，夜行，善于觅食和繁殖。', 'Least Concern', '老鼠是小型哺乳动物，广泛分布于森林和草原。它们以杂食性为主，夜行性，善于觅食和繁殖。老鼠在生态系统中是重要的动物。'),
+('骡子', 'Mule', 'Equus ferus asinus', '草原、牧场', '草食性，群居，用于运输和劳动。', 'Least Concern', '骡子是家畜的一种，广泛分布于草原和牧场。它们以草食性为主，群居生活，用于运输和劳动。骡子在农业中具有重要的经济价值。'),
+('鸵鸟', 'Ostrich', 'Struthio camelus', '草原、沙漠', '草食性，群居，体型最大，善于奔跑。', 'Least Concern', '鸵鸟是鸟类，主要分布在非洲的草原和沙漠。它们以草食性为主，群居生活，体型最大，善于奔跑。鸵鸟在生态系统中是重要的动物。'),
+('水獭', 'Otter', 'Lutrinae', '河流、海岸', '肉食性，群居，善于游泳和捕猎。', 'Least Concern', '水獭是哺乳动物，广泛分布于河流和海岸。它们以肉食性为主，群居生活，善于游泳和捕猎。水獭在生态系统中是重要的捕食者。'),
+('猫头鹰', 'Owl', 'Strigidae', '森林、草原', '肉食性，夜行，视力和听力极佳。', 'Least Concern', '猫头鹰是鸟类，广泛分布于森林和草原。它们以肉食性为主，夜行性，视力和听力极佳。猫头鹰在生态系统中是重要的捕食者。'),
+('熊猫', 'Panda', 'Ailuropoda melanoleuca', '竹林', '草食性，以竹子为食，国宝。', 'Endangered', '熊猫是哺乳动物，主要分布在中国的竹林。它们以草食性为主，以竹子为食，是中国的国宝。熊猫在生态系统中是重要的草食动物，但目前面临严重的生存威胁。'),
+('鹦鹉', 'Parrot', 'Psittacidae', '森林、草原', '杂食性，群居，善于模仿人类语言。', 'Least Concern', '鹦鹉是鸟类，广泛分布于森林和草原。它们以杂食性为主，群居生活，善于模仿人类语言。鹦鹉在宠物市场中非常受欢迎。'),
+('企鹅', 'Penguin', 'Spheniscidae', '南极、南半球', '肉食性，群居，善于游泳，不会飞。', 'Least Concern', '企鹅是鸟类，主要分布在南极和南半球。它们以肉食性为主，群居生活，善于游泳，不会飞。企鹅在生态系统中是重要的动物。'),
+('猪', 'Pig', 'Sus scrofa domesticus', '农场、草原', '杂食性，群居，提供猪肉。', 'Least Concern', '猪是家畜的一种，广泛分布于农场和草原。它们以杂食性为主，群居生活，提供猪肉。猪在农业中具有重要的经济价值。'),
+('北极熊', 'Polar bear', 'Ursus maritimus', '北极', '肉食性，独居，善于游泳，顶级捕食者。', 'Vulnerable', '北极熊是哺乳动物，主要分布在北极。它们以肉食性为主，独居生活，善于游泳，是顶级捕食者。北极熊在生态系统中具有重要的地位，但目前面临生存威胁。'),
+('兔子', 'Rabbit', 'Leporidae', '森林、草原', '草食性，群居，善于繁殖。', 'Least Concern', '兔子是哺乳动物，广泛分布于森林和草原。它们以草食性为主，群居生活，善于繁殖。兔子在生态系统中是重要的草食动物。'),
+('浣熊', 'Raccoon', 'Procyon lotor', '森林、城市', '杂食性，夜行，善于攀爬和觅食。', 'Least Concern', '浣熊是哺乳动物，广泛分布于森林和城市。它们以杂食性为主，夜行性，善于攀爬和觅食。浣熊在生态系统中是重要的动物。'),
+('乌鸦', 'Raven', 'Corvus corax', '森林、草原', '杂食性，群居，智力高，善于鸣叫。', 'Least Concern', '乌鸦是鸟类，广泛分布于森林和草原。它们以杂食性为主，群居生活，智力高，善于鸣叫。乌鸦在生态系统中是重要的动物。'),
+('红熊猫', 'Red panda', 'Ailurus fulgens', '竹林、森林', '草食性，树栖，以竹子为食。', 'Endangered', '红熊猫是哺乳动物，主要分布在中国的竹林和森林。它们以草食性为主，树栖生活，以竹子为食。红熊猫在生态系统中是重要的草食动物，但目前面临严重的生存威胁。'),
+('犀牛', 'Rhinoceros', 'Rhinocerotidae', '草原、森林', '草食性，群居，具有角，体型庞大。', 'Endangered', '犀牛是哺乳动物，主要分布在非洲和亚洲的草原和森林。它们以草食性为主，群居生活，具有角，体型庞大。犀牛在生态系统中是重要的草食动物，但目前面临严重的生存威胁。'),
+('蝎子', 'Scorpion', 'Scorpiones', '沙漠、岩石', '肉食性，夜行，具有毒刺。', 'Least Concern', '蝎子是节肢动物，广泛分布于沙漠和岩石。它们以肉食性为主，夜行性，具有毒刺。蝎子在生态系统中是重要的捕食者。'),
+('海狮', 'Sea lion', 'Otariidae', '海洋、海岸', '肉食性，群居，善于游泳和捕猎。', 'Least Concern', '海狮是海洋哺乳动物，广泛分布于海洋和海岸。它们以肉食性为主，群居生活，善于游泳和捕猎。海狮在生态系统中是重要的捕食者。'),
+('海龟', 'Sea turtle', 'Cheloniidae', '海洋', '肉食性或草食性，生活在水中，寿命长。', 'Endangered', '海龟是海洋爬行动物，广泛分布于海洋。它们以肉食性或草食性为主，生活在水中，寿命长。海龟在生态系统中是重要的动物，但目前面临严重的生存威胁。'),
+('海马', 'Seahorse', 'Syngnathidae', '海洋', '肉食性，生活在水中，具有独特的外形。', 'Least Concern', '海马是海洋鱼类，广泛分布于海洋。它们以肉食性为主，生活在水中，具有独特的外形。海马在生态系统中是重要的动物。'),
+('鲨鱼', 'Shark', 'Selachimorpha', '海洋', '肉食性，生活在水中，顶级捕食者。', 'Endangered', '鲨鱼是海洋鱼类，广泛分布于海洋。它们以肉食性为主，生活在水中，是顶级捕食者。鲨鱼在生态系统中具有重要的地位，但目前面临严重的生存威胁。'),
+('羊', 'Sheep', 'Ovis aries', '草原、山地', '草食性，群居，提供羊毛和羊肉。', 'Least Concern', '羊是家畜的一种，广泛分布于草原和山地。它们以草食性为主，群居生活，提供羊毛和羊肉。羊在农业中具有重要的经济价值。'),
+('虾', 'Shrimp', 'Caridea', '海洋、淡水', '肉食性，生活在水中，具有外壳。', 'Least Concern', '虾是甲壳纲动物，广泛分布于海洋和淡水。它们以肉食性为主，生活在水中，具有外壳。虾在生态系统中是重要的动物。'),
+('蜗牛', 'Snail', 'Gastropoda', '森林、花园', '植食性，具有外壳，移动缓慢。', 'Least Concern', '蜗牛是软体动物，广泛分布于森林和花园。它们以植食性为主，具有外壳，移动缓慢。蜗牛在生态系统中是重要的动物。'),
+('蛇', 'Snake', 'Serpentes', '森林、沙漠', '肉食性，善于捕猎，有些有毒。', 'Least Concern', '蛇是爬行动物，广泛分布于森林和沙漠。它们以肉食性为主，善于捕猎，有些有毒。蛇在生态系统中是重要的捕食者。'),
+('麻雀', 'Sparrow', 'Passeridae', '城市、森林', '杂食性，群居，善于鸣叫。', 'Least Concern', '麻雀是鸟类，广泛分布于城市和森林。它们以杂食性为主，群居生活，善于鸣叫。麻雀在生态系统中是重要的动物。'),
+('蜘蛛', 'Spider', 'Araneae', '森林、城市', '肉食性，善于织网捕猎。', 'Least Concern', '蜘蛛是节肢动物，广泛分布于森林和城市。它们以肉食性为主，善于织网捕猎。蜘蛛在生态系统中是重要的捕食者。'),
+('鱿鱼', 'Squid', 'Sepiida', '海洋', '肉食性，生活在水中，具有墨囊。', 'Least Concern', '鱿鱼是海洋软体动物，广泛分布于海洋。它们以肉食性为主，生活在水中，具有墨囊。鱿鱼在生态系统中是重要的动物。'),
+('松鼠', 'Squirrel', 'Sciuridae', '森林、城市', '杂食性，善于攀爬和储存食物。', 'Least Concern', '松鼠是哺乳动物，广泛分布于森林和城市。它们以杂食性为主，善于攀爬和储存食物。松鼠在生态系统中是重要的动物。'),
+('海星', 'Starfish', 'Asteroidea', '海洋', '肉食性，生活在水中，具有五条臂。', 'Least Concern', '海星是海洋无脊椎动物，广泛分布于海洋。它们以肉食性为主，生活在水中，具有五条臂。海星在生态系统中是重要的动物。'),
+('天鹅', 'Swan', 'Anatidae', '湖泊、河流', '杂食性，群居，善于游泳。', 'Least Concern', '天鹅是水禽的一种，广泛分布于湖泊和河流。它们以杂食性为主，群居生活，善于游泳。天鹅在生态系统中是重要的动物。'),
+('蜱虫', 'Tick', 'Ixodida', '森林、草原', '寄生性，吸食血液，寄生在动物身上。', 'Least Concern', '蜱虫是节肢动物，广泛分布于森林和草原。它们以寄生性为主，吸食血液，寄生在动物身上。蜱虫在生态系统中是重要的动物。'),
+('老虎', 'Tiger', 'Panthera tigris', '森林、草原', '肉食性，独居，顶级捕食者。', 'Endangered', '老虎是猫科动物，主要分布在亚洲的森林和草原。它们以肉食性为主，独居生活，是顶级捕食者。老虎在生态系统中具有重要的地位，但目前面临严重的生存威胁。'),
+('乌龟', 'Tortoise', 'Testudinidae', '陆地', '草食性，寿命长，具有坚硬的外壳。', 'Least Concern', '乌龟是爬行动物，广泛分布于陆地。它们以草食性为主，寿命长，具有坚硬的外壳。乌龟在生态系统中是重要的动物。'),
+('火鸡', 'Turkey', 'Meleagris gallopavo', '森林、草原', '杂食性，群居，提供火鸡肉。', 'Least Concern', '火鸡是鸟类，广泛分布于森林和草原。它们以杂食性为主，群居生活，提供火鸡肉。火鸡在生态系统中是重要的动物。'),
+('海龟', 'Sea turtle', 'Cheloniidae', '海洋', '肉食性或草食性，生活在水中，寿命长。', 'Endangered', '海龟是海洋爬行动物，广泛分布于海洋。它们以肉食性或草食性为主，生活在水中，寿命长。海龟在生态系统中是重要的动物，但目前面临严重的生存威胁。'),
+('鲸鱼', 'Whale', 'Cetacea', '海洋', '肉食性，群居，体型庞大，哺乳动物。', 'Endangered', '鲸鱼是海洋哺乳动物，广泛分布于海洋。它们以肉食性为主，群居生活，体型庞大。鲸鱼在生态系统中具有重要的地位，但目前面临严重的生存威胁。'),
+('啄木鸟', 'Woodpecker', 'Picidae', '森林', '杂食性，善于啄木觅食昆虫。', 'Least Concern', '啄木鸟是鸟类，广泛分布于森林。它们以杂食性为主，善于啄木觅食昆虫。啄木鸟在生态系统中是重要的动物。'),
+('蠕虫', 'Worm', 'Annelida', '土壤、淡水', '植食性或肉食性，生活在土壤或水中。', 'Least Concern', '蠕虫是环节动物，广泛分布于土壤和淡水。它们以植食性或肉食性为主，生活在土壤或水中。蠕虫在生态系统中是重要的动物。'),
+('斑马', 'Zebra', 'Equidae', '草原、沙漠', '草食性，群居，具有黑白相间的条纹。', 'Least Concern', '斑马是哺乳动物，主要分布在非洲的草原和沙漠。它们以草食性为主，群居生活，具有黑白相间的条纹。斑马在生态系统中是重要的草食动物。');
